@@ -1,0 +1,15 @@
+.btn-outline-secondary{
+    background-color: #424bb2;
+    color: white;
+}
+
+        #startbutton {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        #photo {
+            width: 30%;
+            margin-top: 10px;
+        }
