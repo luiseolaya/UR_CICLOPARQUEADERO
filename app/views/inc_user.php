@@ -52,7 +52,7 @@ $entradas = $data['entradas'];
         </form>
     
         <a href="/UR_CICLOPARQUEADERO/reg_entrada">
-    <div class="btn btn-outline-secondary mt-3 mb-4 me-4 btn-lg">+ Entrada</div>
+    <div class="btn btn-outline-secondary mt-2 mb-4 me-2 btn-lg">+ Entrada</div>
 </a>
         <div>
             <table class="table mt-4" id="tablaParqueadero">
@@ -71,7 +71,7 @@ $entradas = $data['entradas'];
                             <th scope="row">&#x2611;&#xfe0f;</th>
                             <td><?php echo htmlspecialchars($entrada['fecha_hora']); ?></td>
                             <td><?php echo htmlspecialchars($entrada['sede_parqueadero']); ?></td>
-                            <td>Evento</td>
+                            <td>Entrada</td>
                             <td>
                                 <form action="/UR_CICLOPARQUEADERO/index.php?controller=entrada&action=salida" method="POST">
                                     <input type="hidden" name="id_entrada" value="<?php echo htmlspecialchars($entrada['id_entrada']); ?>">
