@@ -25,8 +25,8 @@ class EvidenciaController {
 
     public function subirEvidencia() {
         if (!isset($_SESSION['id_usuario'])) {
-            $_SESSION['error'] = 'Debe iniciar sesión para registrar una entrada.';
-            header("Location: /UR_CICLOPARQUEADERO/app/views/inicio_sesion.php");
+            $_SESSION['error'] = 'Primero debes iniciar sesión para registrar una entrada.';
+            header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
 
@@ -37,7 +37,7 @@ class EvidenciaController {
 
             // Asignar valores al modelo
             $this->evidencia->id_usuario = $_SESSION['id_usuario'];
-            $this->evidencia->evidencia = $foto;
+            $this->evidencia->evidencia = base64_encode($foto); // Almacenar en base64
 
             // Intentar crear la evidencia
             if ($this->evidencia->crearEvidencia()) {
@@ -55,10 +55,32 @@ class EvidenciaController {
             exit;
         }
     }
+
+    public function mostrarEvidencia($id_parqueadero) {
+        // Preparar y ejecutar la consulta
+        $stmt = $this->db->prepare("SELECT foto FROM evidencia WHERE id_parqueadero = ?");
+        $stmt->bindParam(1, $id_parqueadero, PDO::PARAM_INT);
+        $stmt->execute();
+        $imagen = $stmt->fetchColumn();
+
+        if ($imagen) {
+            // Mostrar la imagen
+            header("Content-Type: image/png");
+            echo base64_decode($imagen);
+        } else {
+            echo "Imagen no encontrada.";
+        }
+    }
 }
 
+// Manejar la subida de evidencia
 if (isset($_POST['subir_evidencia'])) {
     $evidenciaController = new EvidenciaController();
     $evidenciaController->subirEvidencia();
 }
- 
+
+// Manejar la visualización de evidencia (ejemplo de uso)
+if (isset($_GET['action']) && $_GET['action'] === 'mostrar' && isset($_GET['id_parqueadero'])) {
+    $evidenciaController = new EvidenciaController();
+    $evidenciaController->mostrarEvidencia($_GET['id_parqueadero']);
+}
