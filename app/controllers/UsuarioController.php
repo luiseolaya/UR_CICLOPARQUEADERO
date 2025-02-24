@@ -8,6 +8,7 @@ use App\Models\Entrada;
 use PDO;
 use DateTime;
 use DateTimeZone;
+use PDOException;
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -37,16 +38,24 @@ class UsuarioController {
             $this->usuario->celular = $_POST['celular'] ?? '';
             $this->usuario->clave = password_hash($_POST['clave'] ?? '', PASSWORD_DEFAULT);
 
-            if ($this->usuario->crear()) {
-                $_SESSION['correo'] = $this->usuario->correo;
-                $_SESSION['id_usuario'] = $this->usuario->id_usuario;
-                $_SESSION['mensaje'] = 'Usuario registrado correctamente.';
-                header("Location: /UR_CICLOPARQUEADERO/inc_user");
-                exit;
-            } else {
-                $_SESSION['error'] = 'El correo electrónico ya está registrado.';
-                header("Location: /UR_CICLOPARQUEADERO/registro");
-                exit;
+            try {
+                if ($this->usuario->crear()) {
+                    $_SESSION['correo'] = $this->usuario->correo;
+                    $_SESSION['id_usuario'] = $this->usuario->id_usuario;
+                    $_SESSION['mensaje'] = 'Usuario registrado correctamente.';
+                    header("Location: /UR_CICLOPARQUEADERO/inc_user");
+                    exit;
+                }
+            } catch (PDOException $e) {
+                if ($e->getCode() == 23000) { // Código de error para entrada duplicada
+                    $_SESSION['error'] = 'El correo electrónico ya está registrado.';
+                    header("Location: /UR_CICLOPARQUEADERO/");
+                    exit;
+                } else {
+                    $_SESSION['error'] = 'Error al registrar el usuario: ' . $e->getMessage();
+                    header("Location: /UR_CICLOPARQUEADERO/");
+                    exit;
+                }
             }
         }
     }
@@ -73,12 +82,12 @@ class UsuarioController {
                     exit;
                 } else {
                     $_SESSION['error'] = 'Contraseña incorrecta.';
-                    header("Location: /UR_CICLOPARQUEADERO/inicio_sesion");
+                    header("Location: /UR_CICLOPARQUEADERO/");
                     exit;
                 }
             } else {
                 $_SESSION['error'] = 'Correo no encontrado.';
-                header("Location: /UR_CICLOPARQUEADERO/inicio_sesion");
+                header("Location: /UR_CICLOPARQUEADERO/");
                 exit;
             }
         }
@@ -87,7 +96,7 @@ class UsuarioController {
     public function mostrarUsuarioYEntradas() {
         if (!isset($_SESSION['correo'])) {
             $_SESSION['error'] = 'Debe iniciar sesión para ver esta página.';
-            header("Location: /UR_CICLOPARQUEADERO/inicio_sesion");
+            header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
 
@@ -107,7 +116,7 @@ class UsuarioController {
     
         foreach ($entradas as &$entrada) {
             $date = new DateTime($entrada['fecha_hora'], new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone('America/Bogota'));
+            $date->setTimezone(new DateTimeZone('America/Bogota'));              
             $entrada['fecha_hora'] = $date->format('Y-m-d H:i:s');
         }
     

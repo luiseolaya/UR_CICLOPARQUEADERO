@@ -3,9 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Asegúrate de que el id_parqueadero se almacene en la sesión en la vista anterior
-$id_parqueadero = isset($_SESSION['id_parqueadero']) ? $_SESSION['id_parqueadero'] : null;
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,7 +18,7 @@ $id_parqueadero = isset($_SESSION['id_parqueadero']) ? $_SESSION['id_parqueadero
 <div class="container text-center">
     <?php
     if (!isset($_SESSION['correo'])) {
-        header("Location: /UR_CICLOPARQUEADERO/registro");
+        header("Location: /UR_CICLOPARQUEADERO/");
         exit;
     }
     ?>

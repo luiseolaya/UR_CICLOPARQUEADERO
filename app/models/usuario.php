@@ -23,27 +23,29 @@ class Usuario {
     }
 
     public function crear() {
-        $query = "INSERT INTO " . $this->table_name . " SET nombres=:nombres, apellidos=:apellidos, correo=:correo, celular=:celular, clave=:clave";
-        $stmt = $this->conn->prepare($query);
+        try {
+            $query = "INSERT INTO usuarios (nombres, apellidos, correo, celular, clave) VALUES (:nombres, :apellidos, :correo, :celular, :clave)";
+            $stmt = $this->conn->prepare($query);
 
-        $this->nombres = htmlspecialchars(strip_tags($this->nombres));
-        $this->apellidos = htmlspecialchars(strip_tags($this->apellidos));
-        $this->correo = htmlspecialchars(strip_tags($this->correo));
-        $this->celular = htmlspecialchars(strip_tags($this->celular));
-        $this->clave = htmlspecialchars(strip_tags($this->clave));
+            // Bind parameters
+            $stmt->bindParam(':nombres', $this->nombres);
+            $stmt->bindParam(':apellidos', $this->apellidos);
+            $stmt->bindParam(':correo', $this->correo);
+            $stmt->bindParam(':celular', $this->celular);
+            $stmt->bindParam(':clave', $this->clave);
 
-        $stmt->bindParam(':nombres', $this->nombres);
-        $stmt->bindParam(':apellidos', $this->apellidos);
-        $stmt->bindParam(':correo', $this->correo);
-        $stmt->bindParam(':celular', $this->celular);
-        $stmt->bindParam(':clave', $this->clave);
-
-        if ($stmt->execute()) {
-            $this->id_usuario = $this->conn->lastInsertId();
-            return true;
+            if ($stmt->execute()) {
+                $this->id_usuario = $this->conn->lastInsertId();
+                return true;
+            }
+            return false;
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) { // Código de error para entrada duplicada
+                throw new PDOException('El correo electrónico ya está registrado.', 23000);
+            } else {
+                throw $e; // Re-lanzar la excepción si no es un error de duplicado
+            }
         }
-
-        return false;
     }
 
     public function validar() {
