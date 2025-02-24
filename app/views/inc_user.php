@@ -45,15 +45,14 @@ $entradas = $data['entradas'];
                 <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
             </div>
         </div>
-        <div><h5>Bienvenido, <?php echo htmlspecialchars($usuario['correo']); ?></h5></div>
+        <div><h5>Bienvenido <?php echo htmlspecialchars($usuario['correo']); ?></h5></div>
     
-        <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">
-            <button type="submit" name="logout" class="btn btn-outline-secondary">Salir</button>
-        </form>
-    
-        <a href="/UR_CICLOPARQUEADERO/reg_entrada">
-    <div class="btn btn-outline-secondary mt-3 mb-4 me-4 btn-lg">+ Entrada</div>
-</a>
+        <div class="d-flex justify-content-between mt-3 mb-4">
+            <a href="/UR_CICLOPARQUEADERO/reg_entrada" class="btn btn-outline-secondary btn-lg">+ Entrada</a>
+            <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">
+            <button type="submit" name="logout" class="btn btn-outline-secondary btn-lg">Salir</button>
+            
+        </div>
         <div>
             <table class="table mt-4" id="tablaParqueadero">
                 <thead>
