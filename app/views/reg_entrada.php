@@ -17,7 +17,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <div class="container text-center">
     <?php
     if (!isset($_SESSION['correo'])) {
-        header("Location: /UR_CICLOPARQUEADERO/registro");
+        header("Location: /UR_CICLOPARQUEADERO/");
         exit;
     }
     ?>
@@ -117,20 +117,15 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         function manejarError(error) {
-            console.error('Error al obtener la ubicación: ', error);
             alert('No se pudo obtener la ubicación.');
         }
 
-        obtenerUbicacion(); // Obtener la ubicación al cargar la página
+        obtenerUbicacion(); 
 
         document.getElementById('entrada-form').addEventListener('submit', function(event) {
             // Guardar código y color antes de enviar el formulario
             document.getElementById('codigo_aleatorio').value = localStorage.getItem('codigo_aleatorio');
             document.getElementById('color_aleatorio').value = localStorage.getItem('color_aleatorio');
-
-            // Almacenar el id_parqueadero en la sesión
-            const idParqueadero = document.getElementById('Parqueadero').value;
-            <?php $_SESSION['id_parqueadero'] = "<script>document.write(idParqueadero)</script>"; ?>
         });
     });
 </script>

@@ -35,8 +35,7 @@
                 timer: 3000,
                 timerProgressBar: true
             });
-            return false; // Detener el envío del formulario
-        }
+            return false;        }
 
-        form.submit();  // Si todo está bien, enviamos el formulario
+        form.submit();  
     });

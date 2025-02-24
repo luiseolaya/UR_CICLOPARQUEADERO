@@ -9,7 +9,7 @@ if (session_status() == PHP_SESSION_NONE) {
 class LogoutController {
     public function logout() {
         session_destroy();
-        header("Location: /UR_CICLOPARQUEADERO/inicio_sesion");
+        header("Location: /UR_CICLOPARQUEADERO/");
         exit;
     }
 }

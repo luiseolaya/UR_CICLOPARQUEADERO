@@ -3,14 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Asegúrate de que el id_parqueadero se almacene en la sesión en la vista anterior
-$id_parqueadero = isset($_SESSION['id_parqueadero']) ? $_SESSION['id_parqueadero'] : null;
-
-if ($id_parqueadero === null) {
-    // Redirigir a una página de error o mostrar un mensaje de error si no se encuentra el id_parqueadero
-    echo "Error: No se encontró el id_parqueadero.";
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +18,7 @@ if ($id_parqueadero === null) {
 <div class="container text-center">
     <?php
     if (!isset($_SESSION['correo'])) {
-        header("Location: /UR_CICLOPARQUEADERO/registro");
+        header("Location: /UR_CICLOPARQUEADERO/");
         exit;
     }
     ?>
@@ -49,7 +41,7 @@ if ($id_parqueadero === null) {
             <canvas id="canvas" style="display:none;"></canvas>
             <img id="photo" alt="Tu foto" style="display:none;"/>
             <input type="hidden" name="evidencia" id="evidencia">
-            <input type="hidden" name="id_parqueadero" value="<?php echo $id_parqueadero; ?>"> 
+            <input type="hidden" name="id_usuario" value="<?php echo $_SESSION['id_usuario']; ?>"> 
         </div>
         <button type="submit" name="subir_evidencia" class="btn btn-outline-secondary mt-2 mb-4 fs-6">Subir foto</button>
     </form>
