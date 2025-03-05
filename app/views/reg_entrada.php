@@ -36,7 +36,16 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     <?php endif; ?>
     <form id="entrada-form" action="/UR_CICLOPARQUEADERO/index.php?registrar_entrada=true" method="POST">
-        <div id="alerta" class="text-center" style="display: none; padding: 20px; color: white; border-radius: 5px; margin-top: 10px;"></div>
+        <?php
+        $colores = ['#28a745', '#dc3545', '#ffc107', '#007bff', '#6f42c1'];
+
+        $colorAleatorio = $colores[array_rand($colores)];
+
+        $codigoAleatorio = rand(100000, 999999);
+        ?>
+        <div id="alerta" class="text-center" style="display: none; padding: 20px; color: white; border-radius: 5px; margin-top: 10px; background-color:<?php
+        echo $colorAleatorio;?>;"><?php echo $codigoAleatorio;?>
+        </div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="fs-2 text-start ms-2 mb-2 mt-2 fw-bolder">+ Entrada</div>
             <a href="/UR_CICLOPARQUEADERO/inc_user">
@@ -76,7 +85,7 @@ if (session_status() === PHP_SESSION_NONE) {
     </form>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+     document.addEventListener('DOMContentLoaded', () => {
         const alerta = document.getElementById('alerta');
         const colores = ['#28a745', '#dc3545', '#ffc107', '#007bff', '#6f42c1']; 
 
