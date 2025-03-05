@@ -103,3 +103,62 @@ if (isset($_POST['registrar_entrada'])) {
     $entradaController = new EntradaController();
     $entradaController->registrarEntrada();
 }
+?>
+<script>
+     document.addEventListener('DOMContentLoaded', () => {
+        const alerta = document.getElementById('alerta');
+        const colores = ['#28a745', '#dc3545', '#ffc107', '#007bff', '#6f42c1']; 
+
+        function seleccionarColorAleatorio() {
+            const indiceAleatorio = Math.floor(Math.random() * colores.length);
+            return colores[indiceAleatorio];
+        }
+
+        function generarMensajeAleatorio() {
+            const numeroAleatorio = Math.floor(100000 + Math.random() * 900000);
+            return `${numeroAleatorio}`; 
+        }
+
+        const colorAleatorio = seleccionarColorAleatorio();
+        const mensajeAleatorio = generarMensajeAleatorio();
+        
+        if (alerta) {
+            alerta.style.backgroundColor = colorAleatorio;
+            alerta.textContent = mensajeAleatorio;
+            alerta.style.display = 'block';
+        }
+
+        
+        localStorage.setItem('codigo_aleatorio', mensajeAleatorio);
+        localStorage.setItem('color_aleatorio', colorAleatorio);
+
+        // Geolocalización y Validación
+        function obtenerUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(mostrarUbicacion, manejarError);
+            } else {
+                alert("La geolocalización no es soportada por este navegador.");
+            }
+        }
+
+        function mostrarUbicacion(position) {
+            const latB = position.coords.latitude;
+            const lngB = position.coords.longitude;
+
+            document.getElementById('lat_usuario').value = latB;
+            document.getElementById('lng_usuario').value = lngB;
+        }
+
+        function manejarError(error) {
+            alert('No se pudo obtener la ubicación.');
+        }
+
+        obtenerUbicacion(); 
+
+        document.getElementById('entrada-form').addEventListener('submit', function(event) {
+            // Guardar código y color antes de enviar el formulario
+            document.getElementById('codigo_aleatorio').value = localStorage.getItem('codigo_aleatorio');
+            document.getElementById('color_aleatorio').value = localStorage.getItem('color_aleatorio');
+        });
+    });
+</script>
