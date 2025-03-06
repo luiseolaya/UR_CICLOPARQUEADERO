@@ -48,7 +48,9 @@ $entradas = $data['entradas'];
         <div><h5>Bienvenido <?php echo htmlspecialchars($usuario['correo']); ?></h5></div>
     
         <div class="d-flex justify-content-between mt-3 mb-4">
+            <form action="/UR_CICLOPARQUEADERO/reg_entrada">
             <a href="/UR_CICLOPARQUEADERO/reg_entrada" class="btn btn-outline-secondary btn-lg">+ Entrada</a>
+            </form>
             <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">
             <button type="submit" name="logout" class="btn btn-outline-secondary btn-lg">Salir</button>
             
