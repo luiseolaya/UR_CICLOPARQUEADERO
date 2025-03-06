@@ -37,6 +37,7 @@ class UsuarioController {
             $this->usuario->correo = $_POST['correo'] ?? '';
             $this->usuario->celular = $_POST['celular'] ?? '';
             $this->usuario->clave = password_hash($_POST['clave'] ?? '', PASSWORD_DEFAULT);
+            $this->usuario->rol = 'usuario'; 
 
             try {
                 if ($this->usuario->crear()) {
@@ -68,7 +69,7 @@ class UsuarioController {
             error_log("Correo: " . $this->usuario->correo);
             error_log("Clave: " . $clave);
 
-            $query = "SELECT id_usuario, clave FROM usuarios WHERE correo = :correo";
+            $query = "SELECT id_usuario, clave, rol FROM usuarios WHERE correo = :correo"; // Seleccionar también el campo rol
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':correo', $this->usuario->correo);
             $stmt->execute();
@@ -78,7 +79,14 @@ class UsuarioController {
                 if (password_verify($clave, $usuario['clave'])) {
                     $_SESSION['correo'] = $this->usuario->correo;
                     $_SESSION['id_usuario'] = $usuario['id_usuario'];
-                    header("Location: /UR_CICLOPARQUEADERO/inc_user");
+                    $_SESSION['rol'] = $usuario['rol']; // Guardar el rol en la sesión
+
+                    // Redirigir según el rol del usuario
+                    if ($usuario['rol'] === 'administrador') {
+                        header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+                    } else {
+                        header("Location: /UR_CICLOPARQUEADERO/inc_user");
+                    }
                     exit;
                 } else {
                     $_SESSION['error'] = 'Contraseña incorrecta.';
@@ -126,6 +134,46 @@ class UsuarioController {
     
         return ['usuario' => $usuario, 'entradas' => $entradas];
     }
+
+    // Método para obtener todos los usuarios
+    public function obtenerTodosLosUsuarios() {
+        $query = "SELECT * FROM usuarios";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Método para obtener el usuario con más entradas
+    public function obtenerUsuarioConMasEntradas() {
+        $query = "
+            SELECT u.id_usuario, u.nombres, u.apellidos, COUNT(e.id_entrada) as num_entradas
+            FROM usuarios u
+            JOIN entrada e ON u.id_usuario = e.id_usuario
+            GROUP BY u.id_usuario
+            ORDER BY num_entradas DESC
+            LIMIT 1
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Método para cambiar el rol de un usuario
+    public function cambiarRol() {
+        if (!empty($_POST) && isset($_POST['id_usuario'], $_POST['nuevo_rol'])) {
+            $query = "UPDATE usuarios SET rol = :rol WHERE id_usuario = :id_usuario";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':rol', $_POST['nuevo_rol']);
+            $stmt->bindParam(':id_usuario', $_POST['id_usuario']);
+            if ($stmt->execute()) {
+                $_SESSION['mensaje'] = 'Rol del usuario actualizado correctamente.';
+            } else {
+                $_SESSION['error'] = 'Error al actualizar el rol del usuario.';
+            }
+            header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+            exit;
+        }
+    }
 }
 
 if (isset($_POST['registrar'])) {
@@ -136,4 +184,10 @@ if (isset($_POST['registrar'])) {
 if (isset($_POST['iniciar'])) {
     $usuarioController = new UsuarioController();
     $usuarioController->iniciar();
+}
+
+// Verificar si se ha enviado la solicitud para cambiar el rol
+if (isset($_POST['cambiar_rol'])) {
+    $usuarioController = new UsuarioController();
+    $usuarioController->cambiarRol();
 }

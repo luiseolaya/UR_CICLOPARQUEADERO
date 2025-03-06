@@ -49,6 +49,9 @@ if (isset($params['registrar_entrada'])) {
         case 'inc_user':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inc_user.php';
             break;
+        case 'admin_inc':
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/admin_inc.php';
+            break;
         case 'reg_entrada':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/reg_entrada.php';
             break;

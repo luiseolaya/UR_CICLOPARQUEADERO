@@ -17,6 +17,7 @@ class Usuario {
     public $correo;
     public $celular;
     public $clave;
+    public $rol; 
 
     public function __construct($db) {
         $this->conn = $db;
@@ -24,7 +25,7 @@ class Usuario {
 
     public function crear() {
         try {
-            $query = "INSERT INTO usuarios (nombres, apellidos, correo, celular, clave) VALUES (:nombres, :apellidos, :correo, :celular, :clave)";
+            $query = "INSERT INTO usuarios (nombres, apellidos, correo, celular, clave, rol) VALUES (:nombres, :apellidos, :correo, :celular, :clave, :rol)";
             $stmt = $this->conn->prepare($query);
 
             // Bind parameters
@@ -33,6 +34,7 @@ class Usuario {
             $stmt->bindParam(':correo', $this->correo);
             $stmt->bindParam(':celular', $this->celular);
             $stmt->bindParam(':clave', $this->clave);
+            $stmt->bindParam(':rol', $this->rol); 
 
             if ($stmt->execute()) {
                 $this->id_usuario = $this->conn->lastInsertId();
@@ -49,7 +51,7 @@ class Usuario {
     }
 
     public function validar() {
-        $query = "SELECT id_usuario, clave FROM " . $this->table_name . " WHERE correo = :correo";
+        $query = "SELECT id_usuario, clave, rol FROM " . $this->table_name . " WHERE correo = :correo"; // Seleccionar también el campo rol
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':correo', $this->correo);
         $stmt->execute();
