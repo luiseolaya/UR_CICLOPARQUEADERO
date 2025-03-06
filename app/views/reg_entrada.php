@@ -46,9 +46,8 @@ if (session_status() === PHP_SESSION_NONE) {
         <div id="alerta" class="text-center" style="display: none; padding: 20px; color: white; border-radius: 5px; margin-top: 10px; background-color:<?php
         echo $colorAleatorio;?>;"><?php echo $codigoAleatorio;?>
         </div>
-        <div >
-            <button type="button" class="btn btn-outline-secondary mt-3 mb-4 ms-4 btn-sm fs-6">+ Entrada</button>
-        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="fs-2 text-start ms-2 mb-2 mt-2 fw-bolder">+ Entrada</div>
             <a href="/UR_CICLOPARQUEADERO/inc_user">
                 <button type="button" class="btn btn-outline-secondary mt-3 mb-4 ms-4 btn-sm fs-6">Regresar</button>
             </a>
