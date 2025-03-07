@@ -23,6 +23,25 @@ class EntradaController {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->entrada = new Entrada($this->db);
+
+      
+    
+    }
+
+    public function obtenerEntradasPorUsuario($id_usuario) {
+        $query = "
+            SELECT e.id_entrada, e.fecha_hora, p.sede_parqueadero, e.foto
+            FROM entrada e
+            JOIN parqueadero p ON e.id_parqueadero = p.id_parqueadero
+            WHERE e.id_usuario = :id_usuario
+            ORDER BY e.fecha_hora DESC
+        ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function registrarEntrada() {

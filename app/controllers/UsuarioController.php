@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Config\Database;
 use App\Models\Usuario;
-use App\Models\Entrada; 
+use App\Models\Entrada;
 use PDO;
 use DateTime;
 use DateTimeZone;
@@ -15,7 +15,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/Usuario.php'; 
+require_once __DIR__ . '/../models/Usuario.php';
 require_once __DIR__ . '/../models/Entrada.php';
 
 class UsuarioController {
@@ -37,7 +37,7 @@ class UsuarioController {
             $this->usuario->correo = $_POST['correo'] ?? '';
             $this->usuario->celular = $_POST['celular'] ?? '';
             $this->usuario->clave = password_hash($_POST['clave'] ?? '', PASSWORD_DEFAULT);
-            $this->usuario->rol = 'usuario'; 
+            $this->usuario->rol = 'usuario';
 
             try {
                 if ($this->usuario->crear()) {
@@ -48,15 +48,13 @@ class UsuarioController {
                     exit;
                 }
             } catch (PDOException $e) {
-                if ($e->getCode() == 23000) { // Código de error para entrada duplicada
+                if ($e->getCode() == 23000) { // Error por entrada duplicada
                     $_SESSION['error'] = 'El correo electrónico ya está registrado.';
-                    header("Location: /UR_CICLOPARQUEADERO/");
-                    exit;
                 } else {
                     $_SESSION['error'] = 'Error al registrar el usuario: ' . $e->getMessage();
-                    header("Location: /UR_CICLOPARQUEADERO/");
-                    exit;
                 }
+                header("Location: /UR_CICLOPARQUEADERO/");
+                exit;
             }
         }
     }
@@ -66,10 +64,7 @@ class UsuarioController {
             $this->usuario->correo = $_POST['correo'] ?? '';
             $clave = $_POST['clave'] ?? '';
 
-            error_log("Correo: " . $this->usuario->correo);
-            error_log("Clave: " . $clave);
-
-            $query = "SELECT id_usuario, clave, rol FROM usuarios WHERE correo = :correo"; // Seleccionar también el campo rol
+            $query = "SELECT id_usuario, clave, rol FROM usuarios WHERE correo = :correo";
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':correo', $this->usuario->correo);
             $stmt->execute();
@@ -79,9 +74,8 @@ class UsuarioController {
                 if (password_verify($clave, $usuario['clave'])) {
                     $_SESSION['correo'] = $this->usuario->correo;
                     $_SESSION['id_usuario'] = $usuario['id_usuario'];
-                    $_SESSION['rol'] = $usuario['rol']; // Guardar el rol en la sesión
+                    $_SESSION['rol'] = $usuario['rol'];
 
-                    // Redirigir según el rol del usuario
                     if ($usuario['rol'] === 'administrador') {
                         header("Location: /UR_CICLOPARQUEADERO/admin_inc");
                     } else {
@@ -90,14 +84,12 @@ class UsuarioController {
                     exit;
                 } else {
                     $_SESSION['error'] = 'Contraseña incorrecta.';
-                    header("Location: /UR_CICLOPARQUEADERO/");
-                    exit;
                 }
             } else {
                 $_SESSION['error'] = 'Correo no encontrado.';
-                header("Location: /UR_CICLOPARQUEADERO/");
-                exit;
             }
+            header("Location: /UR_CICLOPARQUEADERO/");
+            exit;
         }
     }
 
@@ -115,27 +107,23 @@ class UsuarioController {
             WHERE e.id_usuario = :id_usuario
             ORDER BY e.fecha_hora DESC
         ";
-    
+
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id_usuario', $_SESSION['id_usuario']);
         $stmt->execute();
-    
+
         $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
         foreach ($entradas as &$entrada) {
             $date = new DateTime($entrada['fecha_hora'], new DateTimeZone('UTC'));
-            $date->setTimezone(new DateTimeZone('America/Bogota'));              
+            $date->setTimezone(new DateTimeZone('America/Bogota'));
             $entrada['fecha_hora'] = $date->format('Y-m-d H:i:s');
         }
-    
-        $usuario = [
-            'correo' => $_SESSION['correo']
-        ];
-    
+
+        $usuario = ['correo' => $_SESSION['correo']];
         return ['usuario' => $usuario, 'entradas' => $entradas];
     }
 
-    // Método para obtener todos los usuarios
     public function obtenerTodosLosUsuarios() {
         $query = "SELECT * FROM usuarios";
         $stmt = $this->db->prepare($query);
@@ -143,22 +131,20 @@ class UsuarioController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para obtener el usuario con más entradas
-    public function obtenerUsuarioConMasEntradas() {
+    public function obtenerUsuariosConMasEntradas() {
         $query = "
-            SELECT u.id_usuario, u.nombres, u.apellidos, COUNT(e.id_entrada) as num_entradas
+            SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, COUNT(e.id_entrada) as num_entradas
             FROM usuarios u
             JOIN entrada e ON u.id_usuario = e.id_usuario
             GROUP BY u.id_usuario
             ORDER BY num_entradas DESC
-            LIMIT 1
+            LIMIT 5
         ";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Método para cambiar el rol de un usuario
     public function cambiarRol() {
         if (!empty($_POST) && isset($_POST['id_usuario'], $_POST['nuevo_rol'])) {
             $query = "UPDATE usuarios SET rol = :rol WHERE id_usuario = :id_usuario";
@@ -166,14 +152,45 @@ class UsuarioController {
             $stmt->bindParam(':rol', $_POST['nuevo_rol']);
             $stmt->bindParam(':id_usuario', $_POST['id_usuario']);
             if ($stmt->execute()) {
-                $_SESSION['mensaje'] = 'Rol del usuario actualizado correctamente.';
+                $_SESSION['mensaje'] = 'Rol actualizado correctamente.';
             } else {
-                $_SESSION['error'] = 'Error al actualizar el rol del usuario.';
+                $_SESSION['error'] = 'Error al actualizar el rol.';
             }
             header("Location: /UR_CICLOPARQUEADERO/admin_inc");
             exit;
         }
     }
+
+    public function obtenerUsuarioPorId($id_usuario) {
+        $query = "SELECT * FROM usuarios WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function actualizarUsuario() {
+        if (!empty($_POST) && isset($_POST['id_usuario'])) {
+            $query = "UPDATE usuarios SET nombres = :nombres, apellidos = :apellidos, correo = :correo, celular = :celular, rol = :rol WHERE id_usuario = :id_usuario";
+            $stmt = $this->db->prepare($query);
+
+            $stmt->bindParam(':id_usuario', $_POST['id_usuario']);
+            $stmt->bindParam(':nombres', $_POST['nombres']);
+            $stmt->bindParam(':apellidos', $_POST['apellidos']);
+            $stmt->bindParam(':correo', $_POST['correo']);
+            $stmt->bindParam(':celular', $_POST['celular']);
+            $stmt->bindParam(':rol', $_POST['rol']);
+
+            if ($stmt->execute()) {
+                $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
+            } else {
+                $_SESSION['error'] = 'Error al actualizar el usuario.';
+            }
+            header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+            exit;
+        }
+    }
+
 }
 
 if (isset($_POST['registrar'])) {
@@ -186,8 +203,12 @@ if (isset($_POST['iniciar'])) {
     $usuarioController->iniciar();
 }
 
-// Verificar si se ha enviado la solicitud para cambiar el rol
 if (isset($_POST['cambiar_rol'])) {
     $usuarioController = new UsuarioController();
     $usuarioController->cambiarRol();
+}
+
+if (isset($_POST['guardar_usuario'])) {
+    $usuarioController = new UsuarioController();
+    $usuarioController->actualizarUsuario();
 }

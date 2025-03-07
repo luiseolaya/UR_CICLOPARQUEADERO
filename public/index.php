@@ -58,6 +58,13 @@ if (isset($params['registrar_entrada'])) {
         case 'evidencia':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/evidencia.php';
             break;
+        case 'edit_user':
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/Edit_user.php';
+            break;
+        case 'view_ent_user':
+                require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/view_ent_user.php';
+                break;
+    
         default:
             http_response_code(404);
             echo "Página no encontrada";

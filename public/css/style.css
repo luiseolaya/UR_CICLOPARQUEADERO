@@ -13,3 +13,14 @@
             width: 30%;
             margin-top: 10px;
         }
+
+        .search-bar {
+            width: 250px;
+        }
+        .actions-icon {
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .btn img {
+            vertical-align: middle;
+        }
