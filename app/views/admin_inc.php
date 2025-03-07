@@ -34,8 +34,8 @@ if ($search) {
         <div class="text-center mb-2 border border-secondary mt-5 d-flex align-items-center">
             <img src="/UR_CICLOPARQUEADERO/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">
             <div>
-                <div class="fs-2 fw-bolder ms-3">Administrador Cicloparqueadero</div>
-                <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
+            <div class="fs-2 fw-bolder ms-3">Cicloparqueadero</div>
+            <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
             </div>
         </div>
         <div class="d-flex justify-content-between align-items-center">
