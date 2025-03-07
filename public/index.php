@@ -9,12 +9,14 @@ use App\Controllers\UsuarioController;
 use App\Controllers\EntradaController;
 use App\Controllers\LogoutController;
 use App\Controllers\EvidenciaController;
+use App\Controllers\ReporteController;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/config/database.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/UsuarioController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/EntradaController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/LogoutController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/EvidenciaController.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/ReporteController.php';
 
 $request = $_SERVER['REQUEST_URI'];
 $request = str_replace("/UR_CICLOPARQUEADERO/", "", $request);
@@ -33,6 +35,12 @@ if (isset($params['registrar_entrada'])) {
 } elseif ($path === 'evidencia' && isset($params['action']) && $params['action'] === 'subir') {
     $controller = new EvidenciaController();
     $controller->subirEvidencia();
+} elseif (isset($params['generar_reporte'])) {
+    // Asegúrate de que no haya ninguna salida antes de la generación del PDF
+    ob_clean();
+    $controller = new ReporteController();
+    $controller->generarReporte();
+    exit; // Asegúrate de que no haya ninguna salida adicional
 } else {
     switch ($path) {
         case '':
@@ -62,12 +70,12 @@ if (isset($params['registrar_entrada'])) {
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/Edit_user.php';
             break;
         case 'view_ent_user':
-                require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/view_ent_user.php';
-                break;
-    
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/view_ent_user.php';
+            break;
         default:
             http_response_code(404);
             echo "Página no encontrada";
             break;
     }
 }
+?>

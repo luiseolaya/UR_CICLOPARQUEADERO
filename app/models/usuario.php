@@ -62,4 +62,17 @@ class Usuario {
 
         return false;
     }
+
+    public function obtenerUsuariosConEntradas() {
+        $query = "
+            SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, COUNT(e.id_entrada) as num_entradas
+            FROM usuarios u
+            LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
+            GROUP BY u.id_usuario
+        ";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

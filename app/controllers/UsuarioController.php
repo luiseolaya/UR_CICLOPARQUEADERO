@@ -191,6 +191,15 @@ class UsuarioController {
         }
     }
 
+    public function buscarUsuarios($termino) {
+        $query = "SELECT * FROM usuarios WHERE nombres LIKE :termino OR apellidos LIKE :termino OR correo LIKE :termino";
+        $stmt = $this->db->prepare($query);
+        $termino = '%' . $termino . '%';
+        $stmt->bindParam(':termino', $termino);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 if (isset($_POST['registrar'])) {
