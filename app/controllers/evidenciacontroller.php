@@ -30,14 +30,14 @@ class EvidenciaController {
             exit;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['evidencia'])) {
-            $foto = $_POST['evidencia'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['foto'])) {
+            $foto = $_POST['foto'];
             $foto = str_replace('data:image/png;base64,', '', $foto);
             $foto = base64_decode($foto);
 
             // Asignar valores al modelo
             $this->evidencia->id_usuario = $_SESSION['id_usuario'];
-            $this->evidencia->evidencia = base64_encode($foto); // Almacenar en base64
+            $this->evidencia->foto = $foto; 
 
             // Intentar crear la evidencia
             if ($this->evidencia->crearEvidencia()) {
@@ -66,10 +66,21 @@ class EvidenciaController {
         if ($imagen) {
             // Mostrar la imagen
             header("Content-Type: image/png");
-            echo base64_decode($imagen);
+            echo $imagen;
         } else {
             echo "Imagen no encontrada.";
         }
+    }
+
+    public function mostrarEvidencias() {
+        if (!isset($_SESSION['id_usuario'])) {
+            $_SESSION['error'] = 'Primero debes iniciar sesión para ver las evidencias.';
+            header("Location: /UR_CICLOPARQUEADERO/");
+            exit;
+        }
+
+        $evidencias = $this->evidencia->obtenerEvidenciasPorUsuario($_SESSION['id_usuario']);
+        return $evidencias;
     }
 }
 

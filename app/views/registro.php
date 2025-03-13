@@ -7,6 +7,7 @@ $error = $_SESSION['error'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,9 @@ $error = $_SESSION['error'] ?? '';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link  href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
+
 <body>
     <?php if ($error): ?>
         <script>
@@ -44,11 +47,11 @@ $error = $_SESSION['error'] ?? '';
                 <div class="fs-2 text-start mb-3 mt-4 fw-bolder ms-2">Iniciar sesión</div>
                 <form action="/UR_CICLOPARQUEADERO/app/controllers/UsuarioController.php" method="POST">
                     <div class="form-floating mb-4 ms-2">
-                        <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com" >
+                        <input type="email" class="form-control" id="floatingInput" name="correo" placeholder="name@example.com">
                         <label for="floatingInput">Correo Electrónico</label>
                     </div>
                     <div class="form-floating ms-2">
-                        <input type="password" class="form-control" id="floatingPassword" name="clave" placeholder="Password" >
+                        <input type="password" class="form-control" id="floatingPassword" name="clave" placeholder="Password">
                         <label for="floatingPassword">Contraseña</label>
                     </div>
                     <div class="button group btn-group-lg mt-3 d-grid gap-2 ms-2">
@@ -61,32 +64,32 @@ $error = $_SESSION['error'] ?? '';
                 <form id="registro-form" action="/UR_CICLOPARQUEADERO/app/controllers/UsuarioController.php" method="POST">
                     <input type="hidden" name="registrar" value="1">
                     <div class="form-floating mb-3 ms-2">
-                        <input type="text" class="form-control" id="nombre" name="nombres" placeholder="Nombres" >
+                        <input type="text" class="form-control" id="nombre" name="nombres" placeholder="Nombres">
                         <label for="nombre">Nombres</label>
                     </div>
                     <div class="form-floating mb-3 ms-2">
-                        <input type="text" class="form-control" id="apellido" name="apellidos" placeholder="Apellidos" >
+                        <input type="text" class="form-control" id="apellido" name="apellidos" placeholder="Apellidos">
                         <label for="apellido">Apellidos</label>
                     </div>
                     <div class="form-floating mb-3 ms-2">
-                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico" >
+                        <input type="email" class="form-control" id="correo" name="correo" placeholder="Correo Electrónico">
                         <label for="correo">Correo Electrónico</label>
                     </div>
                     <div class="form-floating mb-3 ms-2">
-                        <input type="text" class="form-control" id="celular" name="celular" placeholder="Celular" >
+                        <input type="text" class="form-control" id="celular" name="celular" placeholder="Celular">
                         <label for="celular">Celular</label>
                     </div>
                     <div class="form-floating mb-3 ms-2">
-                        <input type="password" class="form-control" id="clave" name="clave" placeholder="Clave" >
+                        <input type="password" class="form-control" id="clave" name="clave" placeholder="Clave">
                         <label for="clave">Clave</label>
                     </div>
                     <div class="form-floating mb-3 ms-2">
-                        <input type="password" class="form-control" id="conf_clave" name="conf_clave" placeholder="Confirmar clave" >
+                        <input type="password" class="form-control" id="conf_clave" name="conf_clave" placeholder="Confirmar clave">
                         <label for="conf_clave">Confirmación clave</label>
                     </div>
                     <div class="mt-3 ms-2">
-                        <input type="checkbox" id="autorizo" name="autorizo" value="1" >
-                        <label for="autorizo"><a href="">Autorizo los términos y condiciones  <a> </label>
+                        <input type="checkbox" id="autorizo" name="autorizo" value="1">
+                        <label for="autorizo"><a href="">Autorizo los términos y condiciones <a> </label>
                     </div>
                     <div class="button group btn-group-lg mt-3 d-grid gap-2 ms-2">
                         <button type="submit" class="btn btn-outline-secondary mt-4 mb-4 fs-6">Registrarse</button>
@@ -109,4 +112,5 @@ $error = $_SESSION['error'] ?? '';
         }
     </script>
 </body>
+
 </html>

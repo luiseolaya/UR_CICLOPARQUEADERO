@@ -51,6 +51,13 @@ class EntradaController {
             exit;
         }
 
+       
+        if ($this->entrada->existeEntradaHoy($_SESSION['id_usuario'])) {
+            $_SESSION['mensaje'] = 'Solo puedes registrar una entrada por día.';
+            header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+            exit;
+        }
+
         if (!empty($_POST)) {
             $codigo_aleatorio = $_POST['codigo_aleatorio'];
             $color_aleatorio = $_POST['color_aleatorio'];
@@ -93,7 +100,6 @@ class EntradaController {
             // Guardar la entrada en la base de datos
             $this->entrada->id_usuario = $_SESSION['id_usuario'];
             $this->entrada->id_parqueadero = $_POST['id_parqueadero'];
-            $this->entrada->fecha_hora = date('Y-m-d H:i:s');
             $this->entrada->fecha_hora = (new DateTime('now', new DateTimeZone('America/Bogota')))->format('Y-m-d H:i:s');
 
             if ($this->entrada->crearEntrada()) {

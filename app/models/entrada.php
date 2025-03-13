@@ -39,4 +39,20 @@ class Entrada {
             throw new PDOException('Error al crear la entrada: ' . $e->getMessage(), (int)$e->getCode());
         }
     }
+
+    public function existeEntradaHoy($id_usuario) {
+        $query = "
+            SELECT COUNT(*) as total
+            FROM entrada
+            WHERE id_usuario = :id_usuario
+            AND DATE(fecha_hora) = CURDATE()
+        ";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] > 0;
+    }
 }

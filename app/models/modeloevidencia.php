@@ -23,11 +23,11 @@ class ModeloEvidencia {
 
         // Limpieza de datos
         $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
-        $this->evidencia = htmlspecialchars(strip_tags($this->evidencia));
+        $this->evidencia = $this->evidencia; // No limpiar la imagen
 
         // Bind de cada valor
         $stmt->bindParam(':id_usuario', $this->id_usuario);
-        $stmt->bindParam(':evidencia', $this->evidencia);
+        $stmt->bindParam(':evidencia', $this->evidencia, PDO::PARAM_LOB);
 
         try {
             if ($stmt->execute()) {

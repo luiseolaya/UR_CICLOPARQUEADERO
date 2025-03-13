@@ -74,5 +74,28 @@ class Usuario {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+    public function actualizar($id) {
+        $query = "UPDATE usuarios SET nombres = :nombres, apellidos = :apellidos, correo = :correo, celular = :celular, rol = :rol WHERE id_usuario = :id_usuario";
+        $stmt = $this->conn->prepare($query);
+
+        // Bind parameters
+        $stmt->bindParam(':id_usuario', $id);
+        $stmt->bindParam(':nombres', $this->nombres);
+        $stmt->bindParam(':apellidos', $this->apellidos);
+        $stmt->bindParam(':correo', $this->correo);
+        $stmt->bindParam(':celular', $this->celular);
+        $stmt->bindParam(':rol', $this->rol);
+
+        return $stmt->execute();
+    }
+
+    public function obtenerPorId($id) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = :id_usuario";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+  
 }

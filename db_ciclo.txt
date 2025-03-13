@@ -1,26 +1,24 @@
--- Crear la base de datos
-CREATE DATABASE IF NOT EXISTS db_cicloparqueadero;
+CREATE DATABASE  db_cicloparqueadero;
 USE db_cicloparqueadero;
 
--- Crear la tabla usuarios
-CREATE TABLE IF NOT EXISTS usuarios (
+CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombres VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
     celular VARCHAR(15),
     clave VARCHAR(255) NOT NULL,
-    rol ENUM('usuario', 'administrador') DEFAULT 'usuario' -- Añadir campo rol
+    rol ENUM('usuario', 'administrador') DEFAULT 'usuario'
 );
 
--- Crear la tabla parqueadero
-CREATE TABLE IF NOT EXISTS parqueadero (
+
+CREATE TABLE parqueadero (
     id_parqueadero INT AUTO_INCREMENT PRIMARY KEY,
     sede_parqueadero VARCHAR(50) NOT NULL
 );
 
--- Crear la tabla entrada
-CREATE TABLE IF NOT EXISTS entrada (
+
+CREATE TABLE entrada (
     id_entrada INT AUTO_INCREMENT PRIMARY KEY,
     id_parqueadero INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
@@ -30,8 +28,8 @@ CREATE TABLE IF NOT EXISTS entrada (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
--- Crear la tabla evidencia
-CREATE TABLE IF NOT EXISTS evidencia (
+
+CREATE TABLE  evidencia (
     id_evidencia INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     foto LONGBLOB,
@@ -39,5 +37,5 @@ CREATE TABLE IF NOT EXISTS evidencia (
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
 
--- Insertar datos en la tabla parqueadero
+
 INSERT INTO parqueadero (sede_parqueadero) VALUES ('Parqueadero A'), ('Parqueadero B');

@@ -12,6 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link  href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
 <body>
 <div class="container text-center">
@@ -34,6 +35,17 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="alert alert-danger" role="alert">
             <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
         </div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['mensaje'])): ?>
+        <script>
+            Swal.fire({
+                title: '¡Atención!',
+                text: '<?php echo $_SESSION['mensaje']; unset($_SESSION['mensaje']); ?>',
+                icon: 'warning',
+                timer: 4000,
+                timerProgressBar: true
+            });
+        </script>
     <?php endif; ?>
     <form id="entrada-form" action="/UR_CICLOPARQUEADERO/index.php?registrar_entrada=true" method="POST">
         <?php

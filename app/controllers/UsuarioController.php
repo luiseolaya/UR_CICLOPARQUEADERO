@@ -91,7 +91,9 @@ class UsuarioController {
             header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
+        
     }
+    
 
     public function mostrarUsuarioYEntradas() {
         if (!isset($_SESSION['correo'])) {
@@ -145,20 +147,33 @@ class UsuarioController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function cambiarRol() {
-        if (!empty($_POST) && isset($_POST['id_usuario'], $_POST['nuevo_rol'])) {
-            $query = "UPDATE usuarios SET rol = :rol WHERE id_usuario = :id_usuario";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':rol', $_POST['nuevo_rol']);
-            $stmt->bindParam(':id_usuario', $_POST['id_usuario']);
-            if ($stmt->execute()) {
-                $_SESSION['mensaje'] = 'Rol actualizado correctamente.';
+  
+
+    public function actualizarUsuario() {
+        if (!empty($_POST) && isset($_POST['id_usuario'])) {
+            $this->usuario->id_usuario = $_POST['id_usuario'];
+            $this->usuario->nombres = $_POST['nombres'];
+            $this->usuario->apellidos = $_POST['apellidos'];
+            $this->usuario->correo = $_POST['correo'];
+            $this->usuario->celular = $_POST['celular'];
+            $this->usuario->rol = $_POST['rol'];
+
+            if ($this->usuario->actualizar($this->usuario->id_usuario)) {
+                $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
+                header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=1");
             } else {
-                $_SESSION['error'] = 'Error al actualizar el rol.';
+                $_SESSION['error'] = 'Error al actualizar el usuario.';
+                header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=0");
             }
-            header("Location: /UR_CICLOPARQUEADERO/admin_inc");
             exit;
         }
+    }
+
+    public function eliminarUsuario($id_usuario) {
+        $query = "DELETE FROM usuarios WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        return $stmt->execute();
     }
 
     public function obtenerUsuarioPorId($id_usuario) {
@@ -169,27 +184,7 @@ class UsuarioController {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function actualizarUsuario() {
-        if (!empty($_POST) && isset($_POST['id_usuario'])) {
-            $query = "UPDATE usuarios SET nombres = :nombres, apellidos = :apellidos, correo = :correo, celular = :celular, rol = :rol WHERE id_usuario = :id_usuario";
-            $stmt = $this->db->prepare($query);
-
-            $stmt->bindParam(':id_usuario', $_POST['id_usuario']);
-            $stmt->bindParam(':nombres', $_POST['nombres']);
-            $stmt->bindParam(':apellidos', $_POST['apellidos']);
-            $stmt->bindParam(':correo', $_POST['correo']);
-            $stmt->bindParam(':celular', $_POST['celular']);
-            $stmt->bindParam(':rol', $_POST['rol']);
-
-            if ($stmt->execute()) {
-                $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
-            } else {
-                $_SESSION['error'] = 'Error al actualizar el usuario.';
-            }
-            header("Location: /UR_CICLOPARQUEADERO/admin_inc");
-            exit;
-        }
-    }
+   
 
     public function buscarUsuarios($termino) {
         $query = "SELECT * FROM usuarios WHERE nombres LIKE :termino OR apellidos LIKE :termino OR correo LIKE :termino";
@@ -212,12 +207,17 @@ if (isset($_POST['iniciar'])) {
     $usuarioController->iniciar();
 }
 
-if (isset($_POST['cambiar_rol'])) {
-    $usuarioController = new UsuarioController();
-    $usuarioController->cambiarRol();
-}
-
 if (isset($_POST['guardar_usuario'])) {
     $usuarioController = new UsuarioController();
     $usuarioController->actualizarUsuario();
+}
+
+if (isset($_POST['eliminar_usuario'])) {
+    $usuarioController = new UsuarioController();
+    if ($usuarioController->eliminarUsuario($_POST['id_usuario'])) {
+        header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=1");
+    } else {
+        header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=0");
+    }
+    exit;
 }
