@@ -9,25 +9,37 @@ use PDO;
 
 class ReporteController {
     public function generarReporte() {
-        ob_start(); // Evita errores de salida
+        ob_start(); 
         $pdf = new PDF();
         $pdf->AddPage();
-        $pdf->SetFont('Arial', 'B', 10); // Fuente más pequeña
+        $pdf->SetFont('Arial', 'B', 10); 
         $pdf->Body();
         ob_end_clean();
-        $pdf->Output('I', 'Documento Final.pdf');
+        $pdf->Output('I', 'Entradas Cicloparqueadero.pdf');
         exit;
     }
 }
 
 class PDF extends FPDF {
     function Header() {
+        $this->Watermark();
         $this->SetFont("Arial", "", 18);
         $this->Image($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/public/img/LOGOU.png", 10, 6, 20);
         $this->Ln(5);
         $this->Cell(30);
-        $this->Cell(0, 10, utf8_decode("Reporte de Usuarios"), 0, 1, 'C');
+        $this->Cell(0, 10, utf8_decode("Reporte de Entradas"), 0, 1, 'C');
         $this->Ln(5);
+    }
+
+    function Watermark() {
+        
+        $watermarkPath = $_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/public/img/Marca_Agua.png";
+        
+        list($width, $height) = getimagesize($watermarkPath);
+        
+        $x = ($this->GetPageWidth() - $width / 4) / 2;
+        $y = ($this->GetPageHeight() - $height / 13) / 8;
+        $this->Image($watermarkPath, $x, $y, $width / 4, $height / 4);
     }
 
     function Body() {
@@ -38,7 +50,7 @@ class PDF extends FPDF {
                 LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
                 GROUP BY u.id_usuario, u.nombres, u.apellidos, u.correo, u.rol
                 ORDER BY entradas DESC
-                LIMIT 999";
+                LIMIT 5";
         $stm = $my->prepare($sql);
         if (!$stm) {
             die("Error en la preparación de la consulta: " . $my->errorInfo()[2]);
@@ -52,7 +64,7 @@ class PDF extends FPDF {
         $stm->bindColumn('entradas', $entradas);
 
         $this->SetFont("Arial", 'B', 9);
-        $this->SetFillColor(200, 220, 255); // Color de fondo
+        $this->SetFillColor(200, 220, 255); 
         $this->Cell(15, 8, "ID", 1, 0, 'C', true);
         $this->Cell(40, 8, "Nombres", 1, 0, 'C', true);
         $this->Cell(40, 8, "Apellidos", 1, 0, 'C', true);
@@ -67,7 +79,7 @@ class PDF extends FPDF {
             $correo = utf8_decode($correo);
 
             $this->Cell(15, 8, $id_usuario, 1, 0, 'C');
-            $this->Cell(40, 8, substr($nombres, 0, 20), 1, 0, 'C'); // Limita a 20 caracteres
+            $this->Cell(40, 8, substr($nombres, 0, 20), 1, 0, 'C'); 
             $this->Cell(40, 8, substr($apellidos, 0, 20), 1, 0, 'C');
             $this->Cell(50, 8, substr($correo, 0, 30), 1, 0, 'C');
             $this->Cell(20, 8, $rol, 1, 0, 'C');
@@ -79,8 +91,6 @@ class PDF extends FPDF {
     function Footer() {
         $this->SetY(-15);
         $this->SetFont("Arial", 'I', 8);
-        $this->Cell(0, 10, "Reporte generado automaticamente", 0, 0, 'C');
+        $this->Cell(0, 10, "Universidad Del Rosario", 0, 0, 'C');
     }
 }
-
-
