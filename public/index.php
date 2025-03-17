@@ -15,7 +15,6 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/config/databa
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/UsuarioController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/EntradaController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/LogoutController.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/EvidenciaController.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/controllers/ReporteController.php';
 
 $request = $_SERVER['REQUEST_URI'];
@@ -32,15 +31,12 @@ if (isset($params['registrar_entrada'])) {
 } elseif (isset($params['logout'])) {
     $controller = new LogoutController();
     $controller->logout();
-} elseif ($path === 'evidencia' && isset($params['action']) && $params['action'] === 'subir') {
-    $controller = new EvidenciaController();
-    $controller->subirEvidencia();
 } elseif (isset($params['generar_reporte'])) {
-    // Asegúrate de que no haya ninguna salida antes de la generación del PDF
+    
     ob_clean();
     $controller = new ReporteController();
     $controller->generarReporte();
-    exit; // Asegúrate de que no haya ninguna salida adicional
+    exit; 
 } else {
     switch ($path) {
         case '':
