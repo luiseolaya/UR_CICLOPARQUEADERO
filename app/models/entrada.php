@@ -12,6 +12,7 @@ class Entrada {
     public $id_usuario;
     public $id_parqueadero;
     public $fecha_hora;
+    public $foto;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -19,16 +20,18 @@ class Entrada {
 
     public function crearEntrada() {
         try {
-            $query = "INSERT INTO " . $this->table_name . " SET id_usuario=:id_usuario, id_parqueadero=:id_parqueadero, fecha_hora=:fecha_hora";
+            $query = "INSERT INTO " . $this->table_name . " SET id_usuario=:id_usuario, id_parqueadero=:id_parqueadero, fecha_hora=:fecha_hora, foto=:foto";
             $stmt = $this->conn->prepare($query);
 
             $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
             $this->id_parqueadero = htmlspecialchars(strip_tags($this->id_parqueadero));
             $this->fecha_hora = htmlspecialchars(strip_tags($this->fecha_hora));
+            $this->foto = $this->foto; // No limpiar la imagen
 
             $stmt->bindParam(':id_usuario', $this->id_usuario);
             $stmt->bindParam(':id_parqueadero', $this->id_parqueadero);
             $stmt->bindParam(':fecha_hora', $this->fecha_hora);
+            $stmt->bindParam(':foto', $this->foto, PDO::PARAM_LOB);
 
             if ($stmt->execute()) {
                 return true;
@@ -36,7 +39,7 @@ class Entrada {
 
             return false;
         } catch (PDOException $e) {
-            throw new PDOException('Error al crear la entrada: ' . $e->getMessage(), (int)$e->getCode());
+            throw new PDOException('Error al crear la entrada en el modelo: ' . $e->getMessage(), (int)$e->getCode());
         }
     }
 

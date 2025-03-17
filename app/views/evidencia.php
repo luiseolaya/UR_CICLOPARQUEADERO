@@ -32,17 +32,16 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
     <div><h5>Bienvenido, <?php echo htmlspecialchars($_SESSION['correo']); ?></h5></div>
     
-    <form id="evidencia-form" action="/UR_CICLOPARQUEADERO/index.php?controller=evidencia&action=subir" method="POST" enctype="multipart/form-data">
+    <form id="evidencia-form" action="/UR_CICLOPARQUEADERO/index.php?subir_evidencia=true" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="foto">Tomar Foto:</label>
             <video id="video" width="100%" height="auto" autoplay></video>
             <button id="startbutton" class="btn btn-link">
-<img src="/UR_CICLOPARQUEADERO/public/img/camara.png" alt="Cámara" style="width: 35px; height: auto;">
-</button>
+                <img src="/UR_CICLOPARQUEADERO/public/img/camara.png" alt="Cámara" style="width: 35px; height: auto;">
+            </button>
             <canvas id="canvas" style="display:none;"></canvas>
             <img id="photo" alt="Tu foto" style="display:none;"/>
-            <input type="hidden" name="evidencia" id="evidencia">
-            <input type="hidden" name="id_usuario" value="<?php echo $_SESSION['id_usuario']; ?>"> 
+            <input type="hidden" name="foto" id="foto">
         </div>
         <button type="submit" name="subir_evidencia" class="btn btn-outline-secondary mt-2 mb-4 fs-6">Subir foto</button>
     </form>
@@ -52,7 +51,7 @@ if (session_status() === PHP_SESSION_NONE) {
     const canvas = document.getElementById('canvas');
     const photo = document.getElementById('photo');
     const startbutton = document.getElementById('startbutton');
-    const evidencia = document.getElementById('evidencia');
+    const foto = document.getElementById('foto');
 
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(stream => {
@@ -72,7 +71,7 @@ if (session_status() === PHP_SESSION_NONE) {
         const data = canvas.toDataURL('image/png');
         photo.setAttribute('src', data);
         photo.style.display = 'block';
-        evidencia.value = data;
+        foto.value = data;
     });
 </script>
 </body>

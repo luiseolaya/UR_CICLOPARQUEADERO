@@ -10,24 +10,24 @@ class ModeloEvidencia {
     private $table_name = "evidencia"; 
 
     public $id_usuario;
-    public $evidencia;
+    public $foto; // Correct property name
 
     public function __construct($db) {
         $this->conn = $db;
     }
 
     public function crearEvidencia() {
-        $query = "INSERT INTO " . $this->table_name . " SET id_usuario=:id_usuario, foto=:evidencia, fecha_hora=NOW()";
+        $query = "INSERT INTO " . $this->table_name . " SET id_usuario=:id_usuario, foto=:foto, fecha_hora=NOW()";
 
         $stmt = $this->conn->prepare($query);
 
         // Limpieza de datos
         $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
-        $this->evidencia = $this->evidencia; // No limpiar la imagen
+        $this->foto = $this->foto; // No limpiar la imagen
 
         // Bind de cada valor
         $stmt->bindParam(':id_usuario', $this->id_usuario);
-        $stmt->bindParam(':evidencia', $this->evidencia, PDO::PARAM_LOB);
+        $stmt->bindParam(':foto', $this->foto, PDO::PARAM_LOB);
 
         try {
             if ($stmt->execute()) {
@@ -38,5 +38,13 @@ class ModeloEvidencia {
         }
 
         return false;
+    }
+
+    public function obtenerEvidenciasPorUsuario($id_usuario) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = :id_usuario";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

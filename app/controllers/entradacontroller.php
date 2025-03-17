@@ -23,9 +23,6 @@ class EntradaController {
         $database = new Database();
         $this->db = $database->getConnection();
         $this->entrada = new Entrada($this->db);
-
-      
-    
     }
 
     public function obtenerEntradasPorUsuario($id_usuario) {
@@ -51,7 +48,6 @@ class EntradaController {
             exit;
         }
 
-       
         if ($this->entrada->existeEntradaHoy($_SESSION['id_usuario'])) {
             $_SESSION['mensaje'] = 'Solo puedes registrar una entrada por día.';
             header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
@@ -97,19 +93,43 @@ class EntradaController {
 
             $_SESSION['entrada_temp'] = $_POST;
 
+            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            exit;
+        }
+    }
+
+    public function subirEvidencia() {
+        if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['entrada_temp'])) {
+            $_SESSION['error'] = 'Primero debes registrar una entrada.';
+            header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['foto'])) {
+            $foto = $_POST['foto'];
+            $foto = str_replace('data:image/png;base64,', '', $foto);
+            $foto = base64_decode($foto);
+
             // Guardar la entrada en la base de datos
             $this->entrada->id_usuario = $_SESSION['id_usuario'];
-            $this->entrada->id_parqueadero = $_POST['id_parqueadero'];
+            $this->entrada->id_parqueadero = $_SESSION['entrada_temp']['id_parqueadero'];
             $this->entrada->fecha_hora = (new DateTime('now', new DateTimeZone('America/Bogota')))->format('Y-m-d H:i:s');
+            $this->entrada->foto = $foto;
 
             if ($this->entrada->crearEntrada()) {
-                header("Location: /UR_CICLOPARQUEADERO/evidencia");
+                unset($_SESSION['entrada_temp']);
+                $_SESSION['mensaje'] = "Entrada registrada con éxito.";
+                header("Location: /UR_CICLOPARQUEADERO/inc_user/");
                 exit;
             } else {
                 $_SESSION['error'] = 'Error al registrar la entrada. Intente nuevamente.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                header("Location: /UR_CICLOPARQUEADERO/evidencia");
                 exit;
             }
+        } else {
+            $_SESSION['error'] = 'Datos de evidencia no encontrados.';
+            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            exit;
         }
     }
 
@@ -121,12 +141,18 @@ class EntradaController {
             cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * 
             sin($dLon / 2) * sin($dLon / 2);
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-        return $radioTierra * $c;     }
+        return $radioTierra * $c;     
+    }
 }
 
 if (isset($_POST['registrar_entrada'])) {
     $entradaController = new EntradaController();
     $entradaController->registrarEntrada();
+}
+
+if (isset($_POST['subir_evidencia'])) {
+    $entradaController = new EntradaController();
+    $entradaController->subirEvidencia();
 }
 ?>
 <script>

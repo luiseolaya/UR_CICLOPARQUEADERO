@@ -52,7 +52,7 @@ if (!$usuario) {
                         <th scope="col">ID Entrada</th>
                         <th scope="col">Fecha y Hora</th>
                         <th scope="col">Sede</th>
-                        <th scope="col">Foto</th>
+                        <th scope="col">Evidencia</th>
                     </tr>
                 </thead>
                 <tbody>

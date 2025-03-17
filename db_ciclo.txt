@@ -1,4 +1,4 @@
-CREATE DATABASE  db_cicloparqueadero;
+CREATE DATABASE db_cicloparqueadero;
 USE db_cicloparqueadero;
 
 CREATE TABLE usuarios (
@@ -11,12 +11,10 @@ CREATE TABLE usuarios (
     rol ENUM('usuario', 'administrador') DEFAULT 'usuario'
 );
 
-
 CREATE TABLE parqueadero (
     id_parqueadero INT AUTO_INCREMENT PRIMARY KEY,
     sede_parqueadero VARCHAR(50) NOT NULL
 );
-
 
 CREATE TABLE entrada (
     id_entrada INT AUTO_INCREMENT PRIMARY KEY,
@@ -27,15 +25,5 @@ CREATE TABLE entrada (
     FOREIGN KEY (id_parqueadero) REFERENCES parqueadero(id_parqueadero) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
-
-
-CREATE TABLE  evidencia (
-    id_evidencia INT AUTO_INCREMENT PRIMARY KEY,
-    id_usuario INT NOT NULL,
-    foto LONGBLOB,
-    fecha_hora DATETIME NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
-);
-
 
 INSERT INTO parqueadero (sede_parqueadero) VALUES ('Parqueadero A'), ('Parqueadero B');
