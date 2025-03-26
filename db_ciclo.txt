@@ -16,6 +16,14 @@ CREATE TABLE parqueadero (
     sede_parqueadero VARCHAR(50) NOT NULL
 );
 
+INSERT INTO `parqueadero` (`id_parqueadero`, `sede_parqueadero`) VALUES
+(1, 'Claustro'),
+(2, 'SQM'),
+(3, 'SEIC'),
+(4, 'MISI'),
+(5, 'NOVA');
+
+
 CREATE TABLE entrada (
     id_entrada INT AUTO_INCREMENT PRIMARY KEY,
     id_parqueadero INT NOT NULL,

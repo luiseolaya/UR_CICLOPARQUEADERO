@@ -70,8 +70,11 @@ class EntradaController {
 
             // Coordenadas de los parqueaderos
             $parqueaderos = [
-                1 => ['lat' => 4.601025504132103, 'lng' => -74.07303884639771],  // Parqueadero A
-                2 => ['lat' => 66.76717277970545, 'lng' => 175.597189200234],   // Parqueadero B
+                1 => ['lat' => 4.5996990, 'lng' => -74.0734580],  // Claustro
+                2 => ['lat' => 4.653844, 'lng' => -74.073169],   // SQM
+                3 => ['lat' => 4.774074, 'lng' => -74.035601],  // SEIC
+                4 => ['lat' => 4.6917010, 'lng' => -74.0617780],  // MISI
+                5 => ['lat' => 4.6803359, 'lng' => -74.0574497],  // NOVA
             ];
 
             if (!isset($parqueaderos[$idParqueadero])) {

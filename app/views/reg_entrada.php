@@ -83,8 +83,11 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="form-floating mb-3 ms-2">
             <select class="form-select" id="Parqueadero" name="id_parqueadero" required>
                 <option selected>Seleccione el Cicloparqueadero</option>
-                <option value="1">Parqueadero A</option>
-                <option value="2">Parqueadero B</option>
+                <option value="1">Claustro</option>
+                <option value="2">SQM</option>
+                <option value="3">SEIC</option>
+                <option value="4">MISI</option>
+                <option value="5">NOVA</option>
             </select>
         </div>
         <div class="button group btn-group-lg mt-2 d-grid gap-2 ms-2">
