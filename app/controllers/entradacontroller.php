@@ -47,19 +47,26 @@ class EntradaController {
             header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
-
+        /*
         if ($this->entrada->existeEntradaHoy($_SESSION['id_usuario'])) {
             $_SESSION['mensaje'] = 'Solo puedes registrar una entrada por día.';
             header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
             exit;
-        }
+        }*/
 
         if (!empty($_POST)) {
             $codigo_aleatorio = $_POST['codigo_aleatorio'];
-            $color_aleatorio = $_POST['color_aleatorio'];
-            $latUsuario = $_POST['lat_usuario'];
-            $lngUsuario = $_POST['lng_usuario'];
+            $color_aleatorio  = $_POST['color_aleatorio'];
+            $latUsuario = isset($_POST['lat_usuario']) ? floatval($_POST['lat_usuario']) : null;
+            $lngUsuario = isset($_POST['lng_usuario']) ? floatval($_POST['lng_usuario']) : null;
             $idParqueadero = $_POST['id_parqueadero'];
+
+            // Validar que las coordenadas no sean nulas
+            if ($latUsuario === null || $lngUsuario === null) {
+                $_SESSION['error'] = 'No se pudo obtener la ubicación del usuario.';
+                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                exit;
+            }
 
             // Coordenadas de los parqueaderos
             $parqueaderos = [

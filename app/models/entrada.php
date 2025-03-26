@@ -42,7 +42,7 @@ class Entrada {
             throw new PDOException('Error al crear la entrada en el modelo: ' . $e->getMessage(), (int)$e->getCode());
         }
     }
-
+    /*
     public function existeEntradaHoy($id_usuario) {
         $query = "
             SELECT COUNT(*) as total
@@ -57,5 +57,5 @@ class Entrada {
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] > 0;
-    }
+    }*/
 }
