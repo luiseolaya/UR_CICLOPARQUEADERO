@@ -113,7 +113,7 @@ $success = $_GET['success'] ?? null;
             <p class="text-start">No hay registros de entradas todavía.</p>
         <?php endif; ?>
 
-        <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
             <h3>Usuarios Registrados</h3>
             <div class="d-flex">
                 <form method="GET" action="/UR_CICLOPARQUEADERO/admin_inc" class="d-flex">
@@ -123,7 +123,7 @@ $success = $_GET['success'] ?? null;
             </div>
         </div>
 
-        <table class="table mt-4">
+        <table class="mt-4 table justify-content-center">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
