@@ -85,7 +85,7 @@ class EntradaController {
 
             $latParqueadero = $parqueaderos[$idParqueadero]['lat'];
             $lngParqueadero = $parqueaderos[$idParqueadero]['lng'];
-            $rangoMaximo = 100000; // Cambiar según sea necesario
+            $rangoMaximo = 0.05; // Cambiar según sea necesario KM
 
             if ($_POST['codigo'] !== $codigo_aleatorio || $_POST['color'] !== $color_aleatorio || $_POST['id_parqueadero'] == 'Seleccione el Cicloparqueadero') {
                 $_SESSION['error'] = 'Ingrese de nuevo el código, color y parqueadero seleccionados.';
