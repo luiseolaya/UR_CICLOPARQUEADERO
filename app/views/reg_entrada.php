@@ -29,7 +29,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
         </div>
     </div>
-    <div><h5>Bienvenido, <?php echo htmlspecialchars($_SESSION['correo']); ?></h5></div>
+    <div><h5><?php echo htmlspecialchars($_SESSION['correo']); ?></h5></div>
     
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger" role="alert">

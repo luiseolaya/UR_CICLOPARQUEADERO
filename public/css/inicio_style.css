@@ -1,0 +1,57 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f8f9fa;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 500px; /* Más ancho en pantallas grandes */
+    padding: 30px; /* Más espacio interno */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-header img {
+    width: 60px; /* Imagen más grande */
+    height: auto;
+}
+
+.login-header .title {
+    font-size: 2rem; /* Texto más grande */
+    font-weight: bold;
+}
+
+.login-header .subtitle {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.form-floating label {
+    font-size: 1rem; /* Etiquetas más grandes */
+}
+
+.btn {
+    font-size: 1rem; /* Botón más grande */
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        max-width: 90%; /* Más pequeño en dispositivos móviles */
+        padding: 20px;
+    }
+    .login-header img {
+        width: 50px; /* Imagen más pequeña en móviles */
+    }
+    .login-header .title {
+        font-size: 1.5rem; /* Texto más pequeño en móviles */
+    }
+    .login-header .subtitle {
+        font-size: 0.9rem;
+    }
+}

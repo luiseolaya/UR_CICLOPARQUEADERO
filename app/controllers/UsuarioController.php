@@ -30,35 +30,6 @@ class UsuarioController {
         $this->entrada = new Entrada($this->db);
     }
 
-    public function registrar() {
-        if (!empty($_POST)) {
-            $this->usuario->nombres = $_POST['nombres'] ?? '';
-            $this->usuario->apellidos = $_POST['apellidos'] ?? '';
-            $this->usuario->correo = $_POST['correo'] ?? '';
-            $this->usuario->celular = $_POST['celular'] ?? '';
-            $this->usuario->clave = password_hash($_POST['clave'] ?? '', PASSWORD_DEFAULT);
-            $this->usuario->rol = 'usuario';
-
-            try {
-                if ($this->usuario->crear()) {
-                    $_SESSION['correo'] = $this->usuario->correo;
-                    $_SESSION['id_usuario'] = $this->usuario->id_usuario;
-                    $_SESSION['mensaje'] = 'Usuario registrado correctamente.';
-                    header("Location: /UR_CICLOPARQUEADERO/inc_user");
-                    exit;
-                }
-            } catch (PDOException $e) {
-                if ($e->getCode() == 23000) { // Error por entrada duplicada
-                    $_SESSION['error'] = 'El correo electrónico ya está registrado.';
-                } else {
-                    $_SESSION['error'] = 'Error al registrar el usuario: ' . $e->getMessage();
-                }
-                header("Location: /UR_CICLOPARQUEADERO/");
-                exit;
-            }
-        }
-    }
-
     public function iniciar() {
         if (!empty($_POST)) {
             $this->usuario->correo = $_POST['correo'] ?? '';
@@ -169,12 +140,6 @@ class UsuarioController {
         }
     }
 
-    public function eliminarUsuario($id_usuario) {
-        $query = "DELETE FROM usuarios WHERE id_usuario = :id_usuario";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id_usuario', $id_usuario);
-        return $stmt->execute();
-    }
 
     public function obtenerUsuarioPorId($id_usuario) {
         $query = "SELECT * FROM usuarios WHERE id_usuario = :id_usuario";
@@ -197,10 +162,7 @@ class UsuarioController {
 
 }
 
-if (isset($_POST['registrar'])) {
-    $usuarioController = new UsuarioController();
-    $usuarioController->registrar();
-}
+
 
 if (isset($_POST['iniciar'])) {
     $usuarioController = new UsuarioController();
@@ -212,12 +174,4 @@ if (isset($_POST['guardar_usuario'])) {
     $usuarioController->actualizarUsuario();
 }
 
-if (isset($_POST['eliminar_usuario'])) {
-    $usuarioController = new UsuarioController();
-    if ($usuarioController->eliminarUsuario($_POST['id_usuario'])) {
-        header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=1");
-    } else {
-        header("Location: /UR_CICLOPARQUEADERO/admin_inc?success=0");
-    }
-    exit;
-}
+

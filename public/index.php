@@ -41,14 +41,7 @@ if (isset($params['registrar_entrada'])) {
     switch ($path) {
         case '':
         case 'index.php':
-            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/registro.php';
-            break;
-        case 'registro':
-            $controller = new UsuarioController();
-            $controller->registrar();
-            break;
-        case 'inicio_sesion':
-            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inicio_sesion.php';
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inicio.php';
             break;
         case 'inc_user':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inc_user.php';
