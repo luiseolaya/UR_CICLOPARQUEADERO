@@ -20,7 +20,13 @@ class Entrada {
 
     public function crearEntrada() {
         try {
-            $query = "INSERT INTO " . $this->table_name . " SET id_usuario=:id_usuario, id_parqueadero=:id_parqueadero, fecha_hora=:fecha_hora, foto=:foto";
+            // Verificar que el id_usuario no sea nulo
+            if (empty($this->id_usuario)) {
+                throw new PDOException('El id_usuario no puede ser nulo.');
+            }
+
+            $query = "INSERT INTO " . $this->table_name . " 
+                      SET id_usuario = :id_usuario, id_parqueadero = :id_parqueadero, fecha_hora = :fecha_hora, foto = :foto";
             $stmt = $this->conn->prepare($query);
 
             $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));

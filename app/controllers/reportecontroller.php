@@ -45,10 +45,10 @@ class PDF extends FPDF {
     function Body() {
         $database = new Database();
         $my = $database->getConnection();
-        $sql = "SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, u.rol, COUNT(e.id_entrada) as entradas
+        $sql = "SELECT u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol, COUNT(e.id_entrada) as entradas
                 FROM usuarios u
                 LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
-                GROUP BY u.id_usuario, u.nombres, u.apellidos, u.correo, u.rol
+                GROUP BY u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol
                 ORDER BY entradas DESC
                 LIMIT 5";
         $stm = $my->prepare($sql);
@@ -56,21 +56,19 @@ class PDF extends FPDF {
             die("Error en la preparación de la consulta: " . $my->errorInfo()[2]);
         }
         $stm->execute();
-        $stm->bindColumn('id_usuario', $id_usuario);
+        $stm->bindColumn('Ndocumento', $Ndocumento);
         $stm->bindColumn('nombres', $nombres);
         $stm->bindColumn('apellidos', $apellidos);
         $stm->bindColumn('correo', $correo);
-        $stm->bindColumn('rol', $rol);
         $stm->bindColumn('entradas', $entradas);
-
+        //campo de encabezado
         $this->SetFont("Arial", 'B', 9);
         $this->SetFillColor(200, 220, 255); 
-        $this->Cell(15, 8, "ID", 1, 0, 'C', true);
+        $this->Cell(25, 8, "N.Documento", 1, 0, 'C', true);
         $this->Cell(40, 8, "Nombres", 1, 0, 'C', true);
         $this->Cell(40, 8, "Apellidos", 1, 0, 'C', true);
         $this->Cell(50, 8, "Correo", 1, 0, 'C', true);
-        $this->Cell(20, 8, "Rol", 1, 0, 'C', true);
-        $this->Cell(20, 8, "Entradas", 1, 1, 'C', true);
+        $this->Cell(20, 8, "N.Entradas", 1, 1, 'C', true);
 
         $this->SetFont("Arial", '', 9);
         while ($stm->fetch(PDO::FETCH_BOUND)) {
@@ -78,11 +76,10 @@ class PDF extends FPDF {
             $apellidos = utf8_decode($apellidos);
             $correo = utf8_decode($correo);
 
-            $this->Cell(15, 8, $id_usuario, 1, 0, 'C');
+            $this->Cell(25, 8, $Ndocumento, 1, 0, 'C');
             $this->Cell(40, 8, substr($nombres, 0, 20), 1, 0, 'C'); 
             $this->Cell(40, 8, substr($apellidos, 0, 20), 1, 0, 'C');
             $this->Cell(50, 8, substr($correo, 0, 30), 1, 0, 'C');
-            $this->Cell(20, 8, $rol, 1, 0, 'C');
             $this->Cell(20, 8, $entradas, 1, 1, 'C');
         }
         $stm->closeCursor();

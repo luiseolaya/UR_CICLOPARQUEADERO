@@ -65,7 +65,7 @@ if (!$usuario) {
                                 <?php if ($entrada['foto']): ?>
                                     <img src="data:image/jpeg;base64,<?php echo base64_encode($entrada['foto']); ?>" alt="Foto" style="width: 100px; height: auto;">
                                 <?php else: ?>
-                                    Sin foto
+                                    Sin evidencia
                                 <?php endif; ?>
                             </td>
                         </tr>

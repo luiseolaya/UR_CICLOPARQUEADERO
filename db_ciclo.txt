@@ -3,11 +3,12 @@ USE db_cicloparqueadero;
 
 CREATE TABLE usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    Ndocumento VARCHAR(20) NOT NULL UNIQUE,
     nombres VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
     celular VARCHAR(15),
-    clave VARCHAR(255) NOT NULL,
+    terminos_condiciones TINYINT(1) DEFAULT 0,
     rol ENUM('usuario', 'administrador') DEFAULT 'usuario'
 );
 
@@ -22,7 +23,6 @@ INSERT INTO `parqueadero` (`id_parqueadero`, `sede_parqueadero`) VALUES
 (3, 'SEIC'),
 (4, 'MISI'),
 (5, 'NOVA');
-
 
 CREATE TABLE entrada (
     id_entrada INT AUTO_INCREMENT PRIMARY KEY,

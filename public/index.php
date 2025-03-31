@@ -43,7 +43,7 @@ if (isset($params['registrar_entrada'])) {
         case 'index.php':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inicio.php';
             break;
-        case 'inc_user':
+        case 'inicio':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inc_user.php';
             break;
         case 'admin_inc':
@@ -56,10 +56,18 @@ if (isset($params['registrar_entrada'])) {
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/evidencia.php';
             break;
         case 'edit_user':
-            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/Edit_user.php';
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['guardar_usuario'])) {
+                $controller = new UsuarioController();
+                $controller->actualizarUsuario();
+            } else {
+                require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/edit_user.php';
+            }
             break;
         case 'view_ent_user':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/view_ent_user.php';
+            break;
+        case 'cel': 
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/cel.php';
             break;
         default:
             http_response_code(404);

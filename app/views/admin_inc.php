@@ -19,6 +19,30 @@ if ($search) {
     $usuarios = $usuarioController->obtenerTodosLosUsuarios();
 }
 $success = $_GET['success'] ?? null;
+
+if (isset($_SESSION['mensaje'])) {
+    echo "<script>
+        Swal.fire({
+            title: '¡Éxito!',
+            text: '" . $_SESSION['mensaje'] . "',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+        });
+    </script>";
+    unset($_SESSION['mensaje']); 
+}
+
+if (isset($_SESSION['error'])) {
+    echo "<script>
+        Swal.fire({
+            title: 'Error',
+            text: '" . $_SESSION['error'] . "',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+        });
+    </script>";
+    unset($_SESSION['error']); 
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +50,7 @@ $success = $_GET['success'] ?? null;
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" width="device-width, initial-scale=1.0">
     <title>Administrador Cicloparqueadero UR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
@@ -104,7 +128,7 @@ $success = $_GET['success'] ?? null;
         <table class="mt-4 table justify-content-center">
             <thead>
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">N documento</th>
                     <th scope="col">Nombres y Apellidos</th>
                     <th scope="col">Correo</th>
                     <th scope="col">Rol</th>
@@ -114,7 +138,7 @@ $success = $_GET['success'] ?? null;
             <tbody>
                 <?php foreach ($usuarios as $usuario): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($usuario['id_usuario']); ?></td>
+                        <td><?php echo htmlspecialchars($usuario['Ndocumento']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['nombres'] . ' ' . $usuario['apellidos']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['rol']); ?></td>

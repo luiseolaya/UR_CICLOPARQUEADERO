@@ -24,6 +24,7 @@ if (!$usuario) {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,8 +32,9 @@ if (!$usuario) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link  href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
+    <link href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
+
 <body>
 
     <div class="container text-center">
@@ -45,26 +47,23 @@ if (!$usuario) {
         </div>
         <div class="container mt-5">
             <div class="text-center">
-                <h2>Editar Usuario</h2>
-                <p>Realiza los cambios necesarios y guarda.</p>
+                <h2>Actualizar rol o numeró de contacto</h2>
             </div>
-            <form action="/UR_CICLOPARQUEADERO/app/controllers/UsuarioController.php" method="POST" class="mt-4">
+            <br>
+            <br>
+            <div class="mb-3">
+                <h3>Nombres y Apellidos</h3>
+                <?php echo htmlspecialchars($usuario['nombres']); ?><?php echo htmlspecialchars($usuario['apellidos']); ?>
+            </div>
+            <div class="mb-3">
+                <h3>Correo Electrónico</h3>
+                <?php echo htmlspecialchars($usuario['correo']); ?>" 
+            </div>
+            <form action="/UR_CICLOPARQUEADERO/edit_user" method="POST" class="mt-4">
                 <input type="hidden" name="id_usuario" value="<?php echo htmlspecialchars($usuario['id_usuario']); ?>">
                 <div class="mb-3">
-                    <label for="nombres" class="form-label">Nombres</label>
-                    <input type="text" class="form-control" id="nombres" name="nombres" value="<?php echo htmlspecialchars($usuario['nombres']); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="apellidos" class="form-label">Apellidos</label>
-                    <input type="text" class="form-control" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($usuario['apellidos']); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="correo" class="form-label">Correo Electrónico</label>
-                    <input type="email" class="form-control" id="correo" name="correo" value="<?php echo htmlspecialchars($usuario['correo']); ?>" required>
-                </div>
-                <div class="mb-3">
                     <label for="celular" class="form-label">Celular</label>
-                    <input type="text" class="form-control" id="celular" name="celular" value="<?php echo htmlspecialchars($usuario['celular']); ?>" required>
+                    <input type="tel" class="form-control" id="celular" name="celular" value="<?php echo htmlspecialchars($usuario['celular']); ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="rol" class="form-label">Rol</label>
@@ -80,4 +79,5 @@ if (!$usuario) {
             </form>
         </div>
 </body>
+
 </html>

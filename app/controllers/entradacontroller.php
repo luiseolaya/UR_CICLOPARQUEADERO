@@ -85,7 +85,7 @@ class EntradaController {
 
             $latParqueadero = $parqueaderos[$idParqueadero]['lat'];
             $lngParqueadero = $parqueaderos[$idParqueadero]['lng'];
-            $rangoMaximo = 0.05; // Cambiar según sea necesario KM
+            $rangoMaximo = 100000; // Cambiar a 0.05 cuando sea necesario KM
 
             if ($_POST['codigo'] !== $codigo_aleatorio || $_POST['color'] !== $color_aleatorio || $_POST['id_parqueadero'] == 'Seleccione el Cicloparqueadero') {
                 $_SESSION['error'] = 'Ingrese de nuevo el código, color y parqueadero seleccionados.';
@@ -115,6 +115,18 @@ class EntradaController {
             exit;
         }
 
+        // Validate id_usuario exists in the usuarios table
+        $query = "SELECT id_usuario FROM usuarios WHERE id_usuario = :id_usuario";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_usuario', $_SESSION['id_usuario']);
+        $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            $_SESSION['error'] = 'El usuario no existe en la base de datos.';
+            header("Location: /UR_CICLOPARQUEADERO/");
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['foto'])) {
             $foto = $_POST['foto'];
             $foto = str_replace('data:image/png;base64,', '', $foto);
@@ -129,7 +141,11 @@ class EntradaController {
             if ($this->entrada->crearEntrada()) {
                 unset($_SESSION['entrada_temp']);
                 $_SESSION['mensaje'] = "Entrada registrada con éxito.";
-                header("Location: /UR_CICLOPARQUEADERO/inc_user/");
+                if ($_SESSION['rol'] === 'administrador') {
+                    header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+                } else {
+                    header("Location: /UR_CICLOPARQUEADERO/inicio");
+                }
                 exit;
             } else {
                 $_SESSION['error'] = 'Error al registrar la entrada. Intente nuevamente.';

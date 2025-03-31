@@ -60,9 +60,18 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
         <div class="d-flex justify-content-between align-items-center">
             <div class="fs-2 text-start ms-2 mb-2 mt-2 fw-bolder">+ Entrada</div>
-            <a href="/UR_CICLOPARQUEADERO/inc_user">
+            <a href="#" onclick="redirectUser()">
                 <button type="button" class="btn btn-outline-secondary mt-3 mb-4 ms-4 btn-sm fs-6">Regresar</button>
             </a>
+            <script>
+                function redirectUser() {
+                    <?php if ($_SESSION['rol'] === 'administrador'): ?>
+                        window.location.href = "/UR_CICLOPARQUEADERO/admin_inc";
+                    <?php else: ?>
+                        window.location.href = "/UR_CICLOPARQUEADERO/inicio";
+                    <?php endif; ?>
+                }
+            </script>
         </div>
         <div class="text-start ms-3"><p>Favor colocar el código numérico que sale en la parte superior y elegir el color correspondiente</p></div>
         
