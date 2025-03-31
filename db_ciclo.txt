@@ -30,7 +30,7 @@ CREATE TABLE entrada (
     id_parqueadero INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
     id_usuario INT NOT NULL,
-    observaciones VARCHAR(100) NULL;
+    observaciones VARCHAR(100) NULL,
     foto LONGBLOB,
     FOREIGN KEY (id_parqueadero) REFERENCES parqueadero(id_parqueadero) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE

@@ -109,5 +109,34 @@ if (session_status() === PHP_SESSION_NONE) {
         <input type="hidden" name="lng_usuario" id="lng_usuario">
     </form>
 </div>
+<script>
+    function obtenerUbicacion() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(mostrarUbicacion, manejarError);
+        } else {
+            manejarError();
+        }
+    }
+
+    function mostrarUbicacion(position) {
+        const latB = position.coords.latitude;
+        const lngB = position.coords.longitude;
+
+        document.getElementById('lat_usuario').value = latB;
+        document.getElementById('lng_usuario').value = lngB;
+    }
+
+    function manejarError() {
+        Swal.fire({
+            position: "top",
+            icon: "warning",
+            title: "No es posible reconocer su ubicación, por lo que no es posible garantizar su ubicación real, sin embargo se permitirá su registro.",
+            ConfirmButton: true,
+            timer: 4000
+        });
+    }
+
+    obtenerUbicacion();
+</script>
 </body>
 </html>

@@ -47,12 +47,6 @@ class EntradaController {
             header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
-        /*
-        if ($this->entrada->existeEntradaHoy($_SESSION['id_usuario'])) {
-            $_SESSION['mensaje'] = 'Solo puedes registrar una entrada por día.';
-            header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-            exit;
-        }*/
 
         if (!empty($_POST)) {
             $codigo_aleatorio = $_POST['codigo_aleatorio'];
@@ -61,19 +55,12 @@ class EntradaController {
             $lngUsuario = isset($_POST['lng_usuario']) ? floatval($_POST['lng_usuario']) : null;
             $idParqueadero = $_POST['id_parqueadero'];
 
-            // Validar que las coordenadas no sean nulas
-            if ($latUsuario === null || $lngUsuario === null) {
-                $_SESSION['error'] = 'No se pudo obtener la ubicación del usuario.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-                exit;
-            }
-
             // Coordenadas de los parqueaderos
             $parqueaderos = [
                 1 => ['lat' => 4.5996990, 'lng' => -74.0734580],  // Claustro
                 2 => ['lat' => 4.653844, 'lng' => -74.073169],   // SQM
                 3 => ['lat' => 4.774074, 'lng' => -74.035601],  // SEIC
-                4 => ['lat' => 4.6917010, 'lng' => -74.0617780],  // MISI
+                4 => ['lat' => 4.691297133089843, 'lng' => -74.06198241200046],  // MISI
                 5 => ['lat' => 4.6803359, 'lng' => -74.0574497],  // NOVA
             ];
 
@@ -93,12 +80,18 @@ class EntradaController {
                 exit;
             }
 
-            // Validar la distancia entre el usuario y el parqueadero
-            $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
-            if ($distancia > $rangoMaximo) {
-                $_SESSION['error'] = 'Estás fuera del rango permitido.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-                exit;
+            // Validar la distancia entre el usuario y el parqueadero si las coordenadas están disponibles
+            if ($latUsuario !== null && $lngUsuario !== null) {
+                $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
+                if ($distancia > $rangoMaximo) {
+                    $_SESSION['error'] = 'Estás fuera del rango permitido.';
+                    header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                    exit;
+                }
+            } else {
+                // Si no se pudo obtener la ubicación, mostrar advertencia
+                $_SESSION['observaciones'] = 'No se pudo reconocer ubicación';
+                $_SESSION['mensaje'] = 'No es posible reconocer su ubicación, por lo que no es posible garantizar su ubicación real, sin embargo se permitirá su registro.';
             }
 
             $_SESSION['entrada_temp'] = $_POST;
@@ -115,7 +108,7 @@ class EntradaController {
             exit;
         }
 
-        // Validate id_usuario exists in the usuarios table
+        
         $query = "SELECT id_usuario FROM usuarios WHERE id_usuario = :id_usuario";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id_usuario', $_SESSION['id_usuario']);
@@ -224,10 +217,6 @@ if (isset($_POST['subir_evidencia'])) {
 
             document.getElementById('lat_usuario').value = latB;
             document.getElementById('lng_usuario').value = lngB;
-        }
-
-        function manejarError(error) {
-            alert('No se pudo obtener la ubicación.');
         }
 
         obtenerUbicacion(); 
