@@ -65,11 +65,12 @@ if (session_status() === PHP_SESSION_NONE) {
             </a>
             <script>
                 function redirectUser() {
-                    <?php if ($_SESSION['rol'] === 'administrador'): ?>
+                    const userRole = "<?php echo $_SESSION['rol']; ?>";
+                    if (userRole === 'administrador') {
                         window.location.href = "/UR_CICLOPARQUEADERO/admin_inc";
-                    <?php else: ?>
+                    } else {
                         window.location.href = "/UR_CICLOPARQUEADERO/inicio";
-                    <?php endif; ?>
+                    }
                 }
             </script>
         </div>

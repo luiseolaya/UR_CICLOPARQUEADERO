@@ -6,6 +6,7 @@ CREATE TABLE usuarios (
     Ndocumento VARCHAR(20) NOT NULL UNIQUE,
     nombres VARCHAR(50) NOT NULL,
     apellidos VARCHAR(50) NOT NULL,
+    facultad VARCHAR (50) NOT NULL,
     correo VARCHAR(100) NOT NULL UNIQUE,
     celular VARCHAR(15),
     terminos_condiciones TINYINT(1) DEFAULT 0,
@@ -29,6 +30,7 @@ CREATE TABLE entrada (
     id_parqueadero INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
     id_usuario INT NOT NULL,
+    observaciones VARCHAR(100) NULL;
     foto LONGBLOB,
     FOREIGN KEY (id_parqueadero) REFERENCES parqueadero(id_parqueadero) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE

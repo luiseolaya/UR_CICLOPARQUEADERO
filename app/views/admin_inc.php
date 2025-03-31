@@ -132,6 +132,7 @@ if (isset($_SESSION['error'])) {
                     <th scope="col">Nombres y Apellidos</th>
                     <th scope="col">Correo</th>
                     <th scope="col">Rol</th>
+                    <th scope="col">Facultad o area</th>
                     <th scope="col">Acción</th>
                 </tr>
             </thead>
@@ -142,6 +143,7 @@ if (isset($_SESSION['error'])) {
                         <td><?php echo htmlspecialchars($usuario['nombres'] . ' ' . $usuario['apellidos']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['rol']); ?></td>
+                        <td><?php echo htmlspecialchars($usuario['facultad']); ?></td>
                         <td>
                             <a href="edit_user?id=<?php echo htmlspecialchars($usuario['id_usuario']); ?>" class="actions-icon">
                                 <img src="/UR_CICLOPARQUEADERO/public/img/edit_icon.png" alt="Modificar" width="20" height="20">

@@ -42,7 +42,7 @@ class UsuarioController {
         $this->ldap_validation($correo, $clave);
 
         if (!isset($_SESSION['id_usuario'])) {
-            $_SESSION['error'] = 'Error en la autenticación con LDAP.';
+            $_SESSION['error'] = 'ERROR CON SUS CREDENCIALES';
             header("Location: /UR_CICLOPARQUEADERO/");
             exit;
         }
@@ -53,6 +53,7 @@ class UsuarioController {
             $this->usuario->Ndocumento = $_SESSION['id_usuario'];
             $this->usuario->nombres = $_SESSION['nombres'];
             $this->usuario->apellidos = $_SESSION['apellidos'];
+            $this->usuario->facultad = $_SESSION['facultad'];
             $this->usuario->correo = $_SESSION['correo'];
             $this->usuario->rol = $_SESSION['rol'];
             $this->usuario->terminos_condiciones = 0;
@@ -65,7 +66,7 @@ class UsuarioController {
         if ($usuario['terminos_condiciones'] == 0) {
             header("Location: /UR_CICLOPARQUEADERO/cel");
         } else {
-            $redirect = $usuario['rol'] === 'administrador' ? '/admin_inc' : '/inicio';
+            $redirect = ($usuario['rol'] === 'administrador') ? '/admin_inc' : '/inicio';
             header("Location: /UR_CICLOPARQUEADERO" . $redirect);
         }
         exit;
@@ -80,7 +81,7 @@ class UsuarioController {
         $ldap_conect = ldap_connect("ldap://urosario.edu", 389);
 
         if (!$ldap_conect) {
-            $_SESSION['error'] = "Error de conexion con Ldap";
+            $_SESSION['error'] = "ERROR DE CREDENCIAL";
             return;
         }
 
@@ -115,13 +116,14 @@ class UsuarioController {
             $this->usuario->Ndocumento = $cedula;
             $this->usuario->nombres = strtoupper($nombres);
             $this->usuario->apellidos = strtoupper($apellidos);
+            $this->usuario->facultad = strtoupper($facultad);
             $this->usuario->correo = $mail;
             $this->usuario->rol = "usuario";
             $this->usuario->terminos_condiciones = 0;
 
             $this->usuario->insertarUsuario();
 
-            // Retrieve the newly inserted user's id_usuario
+            
             $usuarioExistente = $this->usuario->obtenerPorCorreo($mail);
         }
 

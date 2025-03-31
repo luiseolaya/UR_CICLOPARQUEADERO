@@ -13,6 +13,7 @@ class Usuario {
     public $Ndocumento;
     public $nombres;
     public $apellidos;
+    public $facultad;
     public $correo;
     public $celular;
     public $rol;
@@ -70,13 +71,14 @@ class Usuario {
     }
 
     public function insertarUsuario() {
-        $query = "INSERT INTO " . $this->table_name . " (Ndocumento, nombres, apellidos, correo, rol, terminos_condiciones)
-                  VALUES (:Ndocumento, :nombres, :apellidos, :correo, :rol, :terminos_condiciones)";
+        $query = "INSERT INTO " . $this->table_name . " (Ndocumento, nombres, apellidos, facultad, correo, rol, terminos_condiciones)
+                  VALUES (:Ndocumento, :nombres, :apellidos, :facultad, :correo, :rol, :terminos_condiciones)";
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindParam(':Ndocumento', $this->Ndocumento);
         $stmt->bindParam(':nombres', $this->nombres);
         $stmt->bindParam(':apellidos', $this->apellidos);
+        $stmt->bindParam(':facultad', $this->facultad);
         $stmt->bindParam(':correo', $this->correo);
         $stmt->bindParam(':rol', $this->rol);
         $stmt->bindParam(':terminos_condiciones', $this->terminos_condiciones);
