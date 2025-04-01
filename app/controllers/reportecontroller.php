@@ -45,7 +45,7 @@ class PDF extends FPDF {
     function Body() {
         $database = new Database();
         $my = $database->getConnection();
-        $sql = "SELECT u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol, u,facultad COUNT(e.id_entrada) as entradas
+        $sql = "SELECT u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol, COUNT(e.id_entrada) as entradas
                 FROM usuarios u
                 LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
                 GROUP BY u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol

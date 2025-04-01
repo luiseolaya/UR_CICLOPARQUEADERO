@@ -20,36 +20,18 @@ class Entrada {
     }
 
     public function crearEntrada() {
-        try {
-            // Verificar que el id_usuario no sea nulo
-            if (empty($this->id_usuario)) {
-                throw new PDOException('El id_usuario no puede ser nulo.');
-            }
+        $query = "INSERT INTO entrada (id_usuario, id_parqueadero, fecha_hora, foto, observaciones) 
+                  VALUES (:id_usuario, :id_parqueadero, :fecha_hora, :foto, :observaciones)";
 
-            $query = "INSERT INTO " . $this->table_name . " 
-                      SET id_usuario = :id_usuario, id_parqueadero = :id_parqueadero, fecha_hora = :fecha_hora, foto = :foto, observaciones = :observaciones";
-            $stmt = $this->conn->prepare($query);
+        $stmt = $this->conn->prepare($query);
 
-            $this->id_usuario = htmlspecialchars(strip_tags($this->id_usuario));
-            $this->id_parqueadero = htmlspecialchars(strip_tags($this->id_parqueadero));
-            $this->fecha_hora = htmlspecialchars(strip_tags($this->fecha_hora));
-            $this->foto = $this->foto; // No limpiar la imagen
-            $this->observaciones = htmlspecialchars(strip_tags($this->observaciones));
+        $stmt->bindParam(':id_usuario', $this->id_usuario);
+        $stmt->bindParam(':id_parqueadero', $this->id_parqueadero);
+        $stmt->bindParam(':fecha_hora', $this->fecha_hora);
+        $stmt->bindParam(':foto', $this->foto);
+        $stmt->bindParam(':observaciones', $this->observaciones);
 
-            $stmt->bindParam(':id_usuario', $this->id_usuario);
-            $stmt->bindParam(':id_parqueadero', $this->id_parqueadero);
-            $stmt->bindParam(':fecha_hora', $this->fecha_hora);
-            $stmt->bindParam(':foto', $this->foto, PDO::PARAM_LOB);
-            $stmt->bindParam(':observaciones', $this->observaciones);
-
-            if ($stmt->execute()) {
-                return true;
-            }
-
-            return false;
-        } catch (PDOException $e) {
-            throw new PDOException('Error al crear la entrada en el modelo: ' . $e->getMessage(), (int)$e->getCode());
-        }
+        return $stmt->execute();
     }
     /*
     public function existeEntradaHoy($id_usuario) {

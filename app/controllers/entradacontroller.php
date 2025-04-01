@@ -54,13 +54,19 @@ class EntradaController {
             $latUsuario = isset($_POST['lat_usuario']) ? floatval($_POST['lat_usuario']) : null;
             $lngUsuario = isset($_POST['lng_usuario']) ? floatval($_POST['lng_usuario']) : null;
             $idParqueadero = $_POST['id_parqueadero'];
+            $observaciones = isset($_POST['observaciones']) ? $_POST['observaciones'] : '';
+
+            
+            if ($latUsuario === null || $lngUsuario === null) {
+                $observaciones = 'No se pudo reconocer GPS';
+            }
 
             // Coordenadas de los parqueaderos
             $parqueaderos = [
                 1 => ['lat' => 4.5996990, 'lng' => -74.0734580],  // Claustro
                 2 => ['lat' => 4.653844, 'lng' => -74.073169],   // SQM
                 3 => ['lat' => 4.774074, 'lng' => -74.035601],  // SEIC
-                4 => ['lat' => 4.691297133089843, 'lng' => -74.06198241200046],  // MISI
+                4 => ['lat' => 4.6917010, 'lng' => -74.0617780],  // MISI
                 5 => ['lat' => 4.6803359, 'lng' => -74.0574497],  // NOVA
             ];
 
@@ -80,21 +86,21 @@ class EntradaController {
                 exit;
             }
 
-            // Validar la distancia entre el usuario y el parqueadero si las coordenadas están disponibles
-            if ($latUsuario !== null && $lngUsuario !== null) {
-                $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
-                if ($distancia > $rangoMaximo) {
-                    $_SESSION['error'] = 'Estás fuera del rango permitido.';
-                    header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-                    exit;
-                }
-            } else {
-                // Si no se pudo obtener la ubicación, mostrar advertencia
-                $_SESSION['observaciones'] = 'No se pudo reconocer ubicación';
-                $_SESSION['mensaje'] = 'No es posible reconocer su ubicación, por lo que no es posible garantizar su ubicación real, sin embargo se permitirá su registro.';
+            // Validar la distancia entre el usuario y el parqueadero
+            $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
+            if ($distancia > $rangoMaximo) {
+                $_SESSION['error'] = 'Estás fuera del rango permitido.';
+                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                exit;
             }
 
-            $_SESSION['entrada_temp'] = $_POST;
+            //DATOS TEMPORALES DE ENTRADA
+            $_SESSION['entrada_temp'] = [
+                'id_usuario' => $_SESSION['id_usuario'],
+                'id_parqueadero' => $idParqueadero,
+                'fecha_hora' => (new DateTime('now', new DateTimeZone('America/Bogota')))->format('Y-m-d H:i:s'),
+                'observaciones' => $observaciones
+            ];
 
             header("Location: /UR_CICLOPARQUEADERO/evidencia");
             exit;
@@ -108,7 +114,7 @@ class EntradaController {
             exit;
         }
 
-        
+        // Verificar si el usuario existe en la base de datos
         $query = "SELECT id_usuario FROM usuarios WHERE id_usuario = :id_usuario";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id_usuario', $_SESSION['id_usuario']);
@@ -125,14 +131,15 @@ class EntradaController {
             $foto = str_replace('data:image/png;base64,', '', $foto);
             $foto = base64_decode($foto);
 
-            // Guardar la entrada en la base de datos
-            $this->entrada->id_usuario = $_SESSION['id_usuario'];
+            // completar la entrada temporal
+            $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];
             $this->entrada->id_parqueadero = $_SESSION['entrada_temp']['id_parqueadero'];
-            $this->entrada->fecha_hora = (new DateTime('now', new DateTimeZone('America/Bogota')))->format('Y-m-d H:i:s');
+            $this->entrada->fecha_hora = $_SESSION['entrada_temp']['fecha_hora'];
             $this->entrada->foto = $foto;
+            $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
 
             if ($this->entrada->crearEntrada()) {
-                unset($_SESSION['entrada_temp']);
+                unset($_SESSION['entrada_temp']); // Limpiar la entrada temporal
                 $_SESSION['mensaje'] = "Entrada registrada con éxito.";
                 if ($_SESSION['rol'] === 'administrador') {
                     header("Location: /UR_CICLOPARQUEADERO/admin_inc");
@@ -201,25 +208,6 @@ if (isset($_POST['subir_evidencia'])) {
         
         localStorage.setItem('codigo_aleatorio', mensajeAleatorio);
         localStorage.setItem('color_aleatorio', colorAleatorio);
-
-        // Geolocalización y Validación
-        function obtenerUbicacion() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(mostrarUbicacion, manejarError);
-            } else {
-                alert("La geolocalización no es soportada por este navegador.");
-            }
-        }
-
-        function mostrarUbicacion(position) {
-            const latB = position.coords.latitude;
-            const lngB = position.coords.longitude;
-
-            document.getElementById('lat_usuario').value = latB;
-            document.getElementById('lng_usuario').value = lngB;
-        }
-
-        obtenerUbicacion(); 
 
         document.getElementById('entrada-form').addEventListener('submit', function(event) {
             // Guardar código y color antes de enviar el formulario

@@ -107,6 +107,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <input type="hidden" name="color_aleatorio" id="color_aleatorio">
         <input type="hidden" name="lat_usuario" id="lat_usuario">
         <input type="hidden" name="lng_usuario" id="lng_usuario">
+        <input type="hidden" name="observaciones" id="observaciones">
     </form>
 </div>
 <script>
@@ -114,7 +115,7 @@ if (session_status() === PHP_SESSION_NONE) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(mostrarUbicacion, manejarError);
         } else {
-            manejarError();
+            manejarError({ code: 0 });
         }
     }
 
@@ -126,15 +127,48 @@ if (session_status() === PHP_SESSION_NONE) {
         document.getElementById('lng_usuario').value = lngB;
     }
 
-    function manejarError() {
+    function manejarError(error) {
+        let mensaje = '';
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                mensaje = 'El usuario denegó el permiso de geolocalización.';
+                break;
+            case error.POSITION_UNAVAILABLE:
+                mensaje = 'La información de ubicación no está disponible.';
+                break;
+            case error.TIMEOUT:
+                mensaje = 'El tiempo de espera para obtener la ubicación se agotó.';
+                break;
+            default:
+                mensaje = 'Ocurrió un error desconocido.';
+                break;
+        }
+
         Swal.fire({
-            position: "top",
-            icon: "warning",
-            title: "No es posible reconocer su ubicación, por lo que no es posible garantizar su ubicación real, sin embargo se permitirá su registro.",
-            ConfirmButton: true,
-            timer: 4000
-        });
+    position: "top",
+    icon: "warning",
+    title: "<h5 style='font-size: 16px; font-weight: bold;'>No es posible reconocer su ubicación</h5>",
+    html: "<p style='font-size: 14px;'>No es posible garantizar su ubicación real, sin embargo se permitirá su registro.</p><p style='font-size: 12px; color: gray;'>" + mensaje + "</p>",
+    confirmButtonText: "Aceptar",
+    width: "300px", // Reduce el ancho de la alerta
+    padding: "30px", // Reduce el padding interno
+});
+
+        // Establecer valores predeterminados para indicar que no se pudo obtener la ubicación
+        document.getElementById('lat_usuario').value = '';
+        document.getElementById('lng_usuario').value = '';
+        document.getElementById('observaciones').value = 'No se pudo reconocer GPS'; // Agregar observación
     }
+
+    // Asegurarse de que el valor de observaciones se envíe correctamente
+    document.getElementById('entrada-form').addEventListener('submit', function(event) {
+        const latUsuario = document.getElementById('lat_usuario').value;
+        const lngUsuario = document.getElementById('lng_usuario').value;
+
+        if (!latUsuario || !lngUsuario) {
+            document.getElementById('observaciones').value = 'No se pudo reconocer GPS';
+        }
+    });
 
     obtenerUbicacion();
 </script>
