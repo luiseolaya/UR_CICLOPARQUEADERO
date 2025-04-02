@@ -123,6 +123,7 @@ if (session_status() === PHP_SESSION_NONE) {
         const latB = position.coords.latitude;
         const lngB = position.coords.longitude;
 
+        // Asignar las coordenadas a los campos ocultos
         document.getElementById('lat_usuario').value = latB;
         document.getElementById('lng_usuario').value = lngB;
     }
@@ -144,20 +145,20 @@ if (session_status() === PHP_SESSION_NONE) {
                 break;
         }
 
-        Swal.fire({
-    position: "top",
-    icon: "warning",
-    title: "<h5 style='font-size: 16px; font-weight: bold;'>No es posible reconocer su ubicación</h5>",
-    html: "<p style='font-size: 14px;'>No es posible garantizar su ubicación real, sin embargo se permitirá su registro.</p><p style='font-size: 12px; color: gray;'>" + mensaje + "</p>",
-    confirmButtonText: "Aceptar",
-    width: "300px", 
-    padding: "30px", 
-});
-
-        // Establecer valores predeterminados para indicar que no se pudo obtener la ubicación
+        // Limpiar los campos de coordenadas si ocurre un error
         document.getElementById('lat_usuario').value = '';
         document.getElementById('lng_usuario').value = '';
-        document.getElementById('observaciones').value = 'No se pudo reconocer GPS'; // Agregar observación
+
+        // Mostrar alerta al usuario
+        Swal.fire({
+            position: "top",
+            icon: "warning",
+            title: "<h5 style='font-size: 16px; font-weight: bold;'>No es posible reconocer su ubicación</h5>",
+            html: "<p style='font-size: 14px;'>No es posible garantizar su ubicación real, sin embargo se permitirá su registro.</p><p style='font-size: 12px; color: gray;'>" + mensaje + "</p>",
+            confirmButtonText: "Aceptar",
+            width: "300px", // Reduce el ancho de la alerta
+            padding: "30px", // Reduce el padding interno
+        });
     }
 
     // Asegurarse de que el valor de observaciones se envíe correctamente
@@ -165,11 +166,13 @@ if (session_status() === PHP_SESSION_NONE) {
         const latUsuario = document.getElementById('lat_usuario').value;
         const lngUsuario = document.getElementById('lng_usuario').value;
 
+        // Si no hay coordenadas, establecer observación
         if (!latUsuario || !lngUsuario) {
             document.getElementById('observaciones').value = 'No se pudo reconocer GPS';
         }
     });
 
+    // Llamar a la función para obtener la ubicación al cargar la página
     obtenerUbicacion();
 </script>
 </body>

@@ -59,14 +59,14 @@ class UsuarioController {
             $this->usuario->terminos_condiciones = 0;
 
             $this->usuario->insertarUsuario();
-            header("Location: /UR_CICLOPARQUEADERO/cel");
+            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
             exit;
         }
 
         if ($usuario['terminos_condiciones'] == 0) {
-            header("Location: /UR_CICLOPARQUEADERO/cel");
+            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
         } else {
-            $redirect = ($usuario['rol'] === 'administrador') ? '/admin_inc' : '/inicio';
+            $redirect = ($usuario['rol'] === 'administrador') ? '/ADMINISTRADOR' : '/inicio';
             header("Location: /UR_CICLOPARQUEADERO" . $redirect);
         }
         exit;
@@ -215,13 +215,29 @@ class UsuarioController {
 
             if ($this->usuario->actualizar($this->usuario->id_usuario)) {
                 $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
-                header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+                header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
             } else {
                 $_SESSION['error'] = 'Error al actualizar el usuario.';
-                header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+                header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
             }
             exit;
         }
+    }
+    public function mostrarActualizarTelefono() {
+        if (!isset($_SESSION['id_usuario'])) {
+            $_SESSION['error'] = 'Debe iniciar sesión para actualizar su teléfono.';
+            header("Location: /UR_CICLOPARQUEADERO/");
+            exit;
+        }
+    
+        $usuario = $this->usuario->obtenerPorId($_SESSION['id_usuario']);
+        if (!$usuario) {
+            $_SESSION['error'] = 'Usuario no encontrado.';
+            header("Location: /UR_CICLOPARQUEADERO/");
+            exit;
+        }
+    
+        return $usuario;
     }
 
     public function actualizarTerminosYTelefono() {
@@ -235,15 +251,35 @@ class UsuarioController {
                 header("Location: /UR_CICLOPARQUEADERO/inicio");
             } else {
                 $_SESSION['error'] = 'Error al actualizar la información.';
-                header("Location: /UR_CICLOPARQUEADERO/app/views/cel.php");
+                header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
             }
             exit;
         } else {
             $_SESSION['error'] = 'Datos incompletos. Por favor, intente nuevamente.';
-            header("Location: /UR_CICLOPARQUEADERO/app/views/cel.php");
+            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
             exit;
         }
     }
+   
+    public function actualizar() {
+        if (!empty($_POST) && isset($_POST['celular']) ) {
+            $this->usuario->id_usuario = $_SESSION['id_usuario'];
+            $this->usuario->celular = $_POST['celular'];
+            if ($this->usuario->actualizar($this->usuario->id_usuario)) {
+                $_SESSION['mensaje'] = 'Teléfono actualizado correctamente.';
+                header("Location: /UR_CICLOPARQUEADERO/inicio");
+            } else {
+                $_SESSION['error'] = 'Error al actualizar telefono.';
+                header("Location: /UR_CICLOPARQUEADERO/actualizar_telefono");
+            }
+            exit;
+        } else {
+            $_SESSION['error'] = 'Datos incompletos. Por favor, intente nuevamente.';
+            header("Location: /UR_CICLOPARQUEADERO/actualizar_telefono");
+            exit;
+        }
+    } 
+    
 
     public function obtenerUsuarioPorId($id_usuario) {
         $query = "SELECT * FROM usuarios WHERE id_usuario = :id_usuario";
@@ -275,4 +311,7 @@ if (isset($_POST['guardar_usuario'])) {
 }
 if (isset($_POST['actualizar_telefono'])) {
     $usuarioController->actualizarTerminosYTelefono();
+}
+if (isset($_POST['actualizar'])) {
+    $usuarioController->actualizar();
 }

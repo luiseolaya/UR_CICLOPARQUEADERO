@@ -35,5 +35,3 @@ CREATE TABLE entrada (
     FOREIGN KEY (id_parqueadero) REFERENCES parqueadero(id_parqueadero) ON DELETE CASCADE,
     FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
 );
-
-INSERT INTO parqueadero (sede_parqueadero) VALUES ('Parqueadero A'), ('Parqueadero B');

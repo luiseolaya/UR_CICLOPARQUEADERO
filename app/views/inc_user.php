@@ -54,7 +54,9 @@ $entradas = $data['entradas'];
             </form>
             <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">
             <button type="submit" name="logout" class="btn btn-outline-secondary btn-lg">Salir</button>
-            
+            <form action="/UR_CICLOPARQUEADERO/actualizar_telefono">
+            <a href="/UR_CICLOPARQUEADERO/actualizar_telefono" class="btn btn-outline-secondary btn-lg">Actualizar telefono</a>
+            </form>
         </div>
         <div>
             <table class="table mt-4" id="tablaParqueadero">

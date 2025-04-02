@@ -51,25 +51,21 @@ class EntradaController {
         if (!empty($_POST)) {
             $codigo_aleatorio = $_POST['codigo_aleatorio'];
             $color_aleatorio  = $_POST['color_aleatorio'];
-            $latUsuario = isset($_POST['lat_usuario']) ? floatval($_POST['lat_usuario']) : null;
-            $lngUsuario = isset($_POST['lng_usuario']) ? floatval($_POST['lng_usuario']) : null;
             $idParqueadero = $_POST['id_parqueadero'];
+            $latUsuario = isset($_POST['lat_usuario']) && $_POST['lat_usuario'] !== '' ? floatval($_POST['lat_usuario']) : null;
+            $lngUsuario = isset($_POST['lng_usuario']) && $_POST['lng_usuario'] !== '' ? floatval($_POST['lng_usuario']) : null;
             $observaciones = isset($_POST['observaciones']) ? $_POST['observaciones'] : '';
-
-            
-            if ($latUsuario === null || $lngUsuario === null) {
-                $observaciones = 'No se pudo reconocer GPS';
-            }
 
             // Coordenadas de los parqueaderos
             $parqueaderos = [
                 1 => ['lat' => 4.5996990, 'lng' => -74.0734580],  // Claustro
                 2 => ['lat' => 4.653844, 'lng' => -74.073169],   // SQM
                 3 => ['lat' => 4.774074, 'lng' => -74.035601],  // SEIC
-                4 => ['lat' => 4.6917010, 'lng' => -74.0617780],  // MISI
+                4 => ['lat' => 4.6917010 , 'lng' => -74.0617780],  // MISI
                 5 => ['lat' => 4.6803359, 'lng' => -74.0574497],  // NOVA
             ];
 
+            // Validar que el parqueadero seleccionado sea válido
             if (!isset($parqueaderos[$idParqueadero])) {
                 $_SESSION['error'] = 'Seleccione un parqueadero válido.';
                 header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
@@ -78,23 +74,29 @@ class EntradaController {
 
             $latParqueadero = $parqueaderos[$idParqueadero]['lat'];
             $lngParqueadero = $parqueaderos[$idParqueadero]['lng'];
-            $rangoMaximo = 50; // Cambiar a 50 cuando sea necesario KM
+            $rangoMaximo = 0.50; // Rango máximo en kilómetros
 
+            // Validar código, color y parqueadero
             if ($_POST['codigo'] !== $codigo_aleatorio || $_POST['color'] !== $color_aleatorio || $_POST['id_parqueadero'] == 'Seleccione el Cicloparqueadero') {
                 $_SESSION['error'] = 'Ingrese de nuevo el código, color y parqueadero seleccionados.';
                 header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
                 exit;
             }
 
-            // Validar la distancia entre el usuario y el parqueadero
-            $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
-            if ($distancia > $rangoMaximo) {
-                $_SESSION['error'] = 'Estás fuera del rango permitido.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-                exit;
+            // Caso 1: Si se reciben coordenadas GPS
+            if ($latUsuario !== null && $lngUsuario !== null) {
+                $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
+                if ($distancia > $rangoMaximo) {
+                    $_SESSION['error'] = 'Debe estar dentro del rango de 50 kilómetros para registrar la entrada.';
+                    header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                    exit;
+                }
+            } else {
+                // Caso 2: Si no se reciben coordenadas GPS
+                $observaciones = 'No se pudo reconocer GPS';
             }
 
-            //DATOS TEMPORALES DE ENTRADA
+            // Guardar datos temporales de la entrada
             $_SESSION['entrada_temp'] = [
                 'id_usuario' => $_SESSION['id_usuario'],
                 'id_parqueadero' => $idParqueadero,
@@ -130,20 +132,6 @@ class EntradaController {
             $foto = $_POST['foto'];
             $foto = str_replace('data:image/png;base64,', '', $foto);
             $foto = base64_decode($foto);
-
-            // tamaño de la foto (5 MB)
-            if (strlen($foto) > 5 * 1024 * 1024) {
-                echo "<script>
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No es posible almacenar la foto porque excede el tamaño permitido (5 MB).'
-                    }).then(() => {
-                        window.location.href = '/UR_CICLOPARQUEADERO/evidencia';
-                    });
-                </script>";
-                exit;
-            }
 
             // completar la entrada temporal
             $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];

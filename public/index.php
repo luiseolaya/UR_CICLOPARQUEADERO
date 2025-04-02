@@ -46,7 +46,7 @@ if (isset($params['registrar_entrada'])) {
         case 'inicio':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/inc_user.php';
             break;
-        case 'admin_inc':
+        case 'ADMINISTRADOR':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/admin_inc.php';
             break;
         case 'reg_entrada':
@@ -66,8 +66,11 @@ if (isset($params['registrar_entrada'])) {
         case 'view_ent_user':
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/view_ent_user.php';
             break;
-        case 'cel': 
+        case 'TERMINOS': 
             require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/cel.php';
+            break;
+        case 'actualizar_telefono':
+            require $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/app/views/ac_cel.php';
             break;
         default:
             http_response_code(404);
