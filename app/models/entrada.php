@@ -33,20 +33,4 @@ class Entrada {
 
         return $stmt->execute();
     }
-    /*
-    public function existeEntradaHoy($id_usuario) {
-        $query = "
-            SELECT COUNT(*) as total
-            FROM entrada
-            WHERE id_usuario = :id_usuario
-            AND DATE(fecha_hora) = CURDATE()
-        ";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_usuario', $id_usuario);
-        $stmt->execute();
-
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'] > 0;
-    }*/
 }

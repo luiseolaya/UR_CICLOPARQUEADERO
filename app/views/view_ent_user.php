@@ -53,6 +53,7 @@ if (!$usuario) {
                         <th scope="col">Fecha y Hora</th>
                         <th scope="col">Sede</th>
                         <th scope="col">Evidencia</th>
+                        <th scope="col">observaciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +62,7 @@ if (!$usuario) {
                             <td><?php echo htmlspecialchars($entrada['id_entrada']); ?></td>
                             <td><?php echo htmlspecialchars($entrada['fecha_hora']); ?></td>
                             <td><?php echo htmlspecialchars($entrada['sede_parqueadero']); ?></td>
+                            <td><?php echo htmlspecialchars($entrada['observaciones'])?></td>
                             <td>
                                 <?php if ($entrada['foto']): ?>
                                     <img src="data:image/jpeg;base64,<?php echo base64_encode($entrada['foto']); ?>" alt="Foto" style="width: 100px; height: auto;">

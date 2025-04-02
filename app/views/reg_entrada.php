@@ -150,8 +150,8 @@ if (session_status() === PHP_SESSION_NONE) {
     title: "<h5 style='font-size: 16px; font-weight: bold;'>No es posible reconocer su ubicación</h5>",
     html: "<p style='font-size: 14px;'>No es posible garantizar su ubicación real, sin embargo se permitirá su registro.</p><p style='font-size: 12px; color: gray;'>" + mensaje + "</p>",
     confirmButtonText: "Aceptar",
-    width: "300px", // Reduce el ancho de la alerta
-    padding: "30px", // Reduce el padding interno
+    width: "300px", 
+    padding: "30px", 
 });
 
         // Establecer valores predeterminados para indicar que no se pudo obtener la ubicación

@@ -45,43 +45,48 @@ class PDF extends FPDF {
     function Body() {
         $database = new Database();
         $my = $database->getConnection();
-        $sql = "SELECT u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol, COUNT(e.id_entrada) as entradas
-                FROM usuarios u
-                LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
-                GROUP BY u.Ndocumento, u.nombres, u.apellidos, u.correo, u.rol
-                ORDER BY entradas DESC
-                LIMIT 5";
+        $sql = "
+            SELECT 
+                u.Ndocumento, 
+                u.nombres, 
+                u.apellidos, 
+                u.correo, 
+                COUNT(DISTINCT DATE(e.fecha_hora)) as entradas_unicas,
+                COUNT(e.id_entrada) as total_entradas
+            FROM usuarios u
+            LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
+            GROUP BY u.Ndocumento, u.nombres, u.apellidos, u.correo
+            ORDER BY entradas_unicas DESC
+            LIMIT 10
+        ";
+
         $stm = $my->prepare($sql);
         if (!$stm) {
             die("Error en la preparación de la consulta: " . $my->errorInfo()[2]);
         }
         $stm->execute();
-        $stm->bindColumn('Ndocumento', $Ndocumento);
-        $stm->bindColumn('nombres', $nombres);
-        $stm->bindColumn('apellidos', $apellidos);
-        $stm->bindColumn('correo', $correo);
-        $stm->bindColumn('entradas', $entradas);
-        //campo de encabezado
+
+        // Encabezados de la tabla
         $this->SetFont("Arial", 'B', 9);
         $this->SetFillColor(200, 220, 255); 
-        $this->Cell(25, 8, "N.Documento", 1, 0, 'C', true);
-        $this->Cell(40, 8, "Nombres", 1, 0, 'C', true);
-        $this->Cell(40, 8, "Apellidos", 1, 0, 'C', true);
+        $this->Cell(28, 8, "N.Documento", 1, 0, 'C', true);
+        $this->Cell(35, 8, "Nombres", 1, 0, 'C', true);
+        $this->Cell(35, 8, "Apellidos", 1, 0, 'C', true);
         $this->Cell(50, 8, "Correo", 1, 0, 'C', true);
-        $this->Cell(20, 8, "N.Entradas", 1, 1, 'C', true);
+        $this->Cell(26, 8, "Entradas  Unicas", 1, 0, 'C', true);
+        $this->Cell(24, 8, "Total Entradas", 1, 1, 'C', true);
 
+        // Datos de la tabla
         $this->SetFont("Arial", '', 9);
-        while ($stm->fetch(PDO::FETCH_BOUND)) {
-            $nombres = utf8_decode($nombres);
-            $apellidos = utf8_decode($apellidos);
-            $correo = utf8_decode($correo);
-
-            $this->Cell(25, 8, $Ndocumento, 1, 0, 'C');
-            $this->Cell(40, 8, substr($nombres, 0, 20), 1, 0, 'C'); 
-            $this->Cell(40, 8, substr($apellidos, 0, 20), 1, 0, 'C');
-            $this->Cell(50, 8, substr($correo, 0, 30), 1, 0, 'C');
-            $this->Cell(20, 8, $entradas, 1, 1, 'C');
+        while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
+            $this->Cell(28, 8, $row['Ndocumento'], 1, 0, 'C');
+            $this->Cell(35, 8, utf8_decode(substr($row['nombres'], 0, 20)), 1, 0, 'C');
+            $this->Cell(35, 8, utf8_decode(substr($row['apellidos'], 0, 20)), 1, 0, 'C');
+            $this->Cell(50, 8, utf8_decode(substr($row['correo'], 0, 30)), 1, 0, 'C');
+            $this->Cell(26, 8, $row['entradas_unicas'], 1, 0, 'C');
+            $this->Cell(24, 8, $row['total_entradas'], 1, 1, 'C');
         }
+
         $stm->closeCursor();
     }
 

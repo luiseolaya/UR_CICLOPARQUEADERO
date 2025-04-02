@@ -92,12 +92,13 @@ if (isset($_SESSION['error'])) {
         </div>
 
         <?php if ($usuariosConMasEntradas): ?>
-            <table class="table mt-4">
-                <thead>
+            <table class="table table-striped table-hover mt-4">
+                <thead class="table-primary">
                     <tr>
                         <th scope="col">Nombres y Apellidos</th>
                         <th scope="col">Correo</th>
-                        <th scope="col">Entradas</th>
+                        <th scope="col">Entradas Únicas por Día</th>
+                        <th scope="col">Total de Entradas Registradas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,6 +107,7 @@ if (isset($_SESSION['error'])) {
                             <td><?php echo htmlspecialchars($usuario['nombres'] . ' ' . $usuario['apellidos']); ?></td>
                             <td><?php echo htmlspecialchars($usuario['correo']); ?></td>
                             <td><?php echo htmlspecialchars($usuario['num_entradas']); ?></td>
+                            <td><?php echo htmlspecialchars($usuario['total_entradas']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

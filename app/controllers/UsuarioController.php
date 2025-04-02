@@ -176,11 +176,30 @@ class UsuarioController {
 
     public function obtenerUsuariosConMasEntradas() {
         $query = "
-            SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, COUNT(e.id_entrada) as num_entradas
+            SELECT 
+                u.id_usuario, 
+                u.nombres, 
+                u.apellidos, 
+                u.correo, 
+                COUNT(DISTINCT DATE(e.fecha_hora)) as num_entradas, 
+                COUNT(e.id_entrada) as total_entradas
             FROM usuarios u
-            JOIN entrada e ON u.id_usuario = e.id_usuario
+            LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
             GROUP BY u.id_usuario
             ORDER BY num_entradas DESC
+            LIMIT 5
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function obtenerUsuariosConTotalEntradas() {
+        $query = "
+            SELECT u.id_usuario, u.nombres, u.apellidos, u.correo, COUNT(e.id_entrada) as total_entradas
+            FROM usuarios u
+            LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
+            GROUP BY u.id_usuario
+            ORDER BY total_entradas DESC
             LIMIT 5
         ";
         $stmt = $this->db->prepare($query);

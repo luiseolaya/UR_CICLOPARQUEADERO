@@ -78,7 +78,7 @@ class EntradaController {
 
             $latParqueadero = $parqueaderos[$idParqueadero]['lat'];
             $lngParqueadero = $parqueaderos[$idParqueadero]['lng'];
-            $rangoMaximo = 100000; // Cambiar a 0.05 cuando sea necesario KM
+            $rangoMaximo = 50; // Cambiar a 50 cuando sea necesario KM
 
             if ($_POST['codigo'] !== $codigo_aleatorio || $_POST['color'] !== $color_aleatorio || $_POST['id_parqueadero'] == 'Seleccione el Cicloparqueadero') {
                 $_SESSION['error'] = 'Ingrese de nuevo el código, color y parqueadero seleccionados.';
@@ -130,6 +130,20 @@ class EntradaController {
             $foto = $_POST['foto'];
             $foto = str_replace('data:image/png;base64,', '', $foto);
             $foto = base64_decode($foto);
+
+            // tamaño de la foto (5 MB)
+            if (strlen($foto) > 5 * 1024 * 1024) {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No es posible almacenar la foto porque excede el tamaño permitido (5 MB).'
+                    }).then(() => {
+                        window.location.href = '/UR_CICLOPARQUEADERO/evidencia';
+                    });
+                </script>";
+                exit;
+            }
 
             // completar la entrada temporal
             $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];
