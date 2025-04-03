@@ -18,11 +18,12 @@ if (!$id_usuario) {
     exit;
 }
 
-// Obtener los datos del usuario
+
 $usuario = $usuarioController->obtenerUsuarioPorId($id_usuario);
 
-// Obtener las entradas del usuario
+
 $entradas = $entradaController->obtenerEntradasPorUsuario($id_usuario);
+
 
 if (!$usuario) {
     echo "Usuario no encontrado.";
@@ -53,6 +54,7 @@ if (!$usuario) {
                         <th scope="col">Fecha y Hora</th>
                         <th scope="col">Sede</th>
                         <th scope="col">Evidencia</th>
+                        <th scope="col">observaciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +70,7 @@ if (!$usuario) {
                                     Sin evidencia
                                 <?php endif; ?>
                             </td>
+                            <td><?php echo htmlspecialchars($entrada['observaciones']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

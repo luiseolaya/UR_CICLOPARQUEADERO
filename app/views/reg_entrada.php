@@ -67,14 +67,14 @@ if (session_status() === PHP_SESSION_NONE) {
                 function redirectUser() {
                     const userRole = "<?php echo $_SESSION['rol']; ?>";
                     if (userRole === 'administrador') {
-                        window.location.href = "/UR_CICLOPARQUEADERO/admin_inc";
+                        window.location.href = "/UR_CICLOPARQUEADERO/ADMINISTRADOR";
                     } else {
                         window.location.href = "/UR_CICLOPARQUEADERO/inicio";
                     }
                 }
             </script>
         </div>
-        <div class="text-start ms-3"><p>Favor colocar el código numérico que sale en la parte superior y elegir el color correspondiente</p></div>
+        <div class="text-start ms-3"><p>Por favor colocar el código numérico que sale en la parte superior y elegir el color correspondiente</p></div>
         
         <div class="form-floating mb-3 ms-2">
             <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Ingrese el código" required>

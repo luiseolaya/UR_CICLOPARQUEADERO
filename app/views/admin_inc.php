@@ -19,32 +19,18 @@ if ($search) {
     $usuarios = $usuarioController->obtenerTodosLosUsuarios();
 }
 $success = $_GET['success'] ?? null;
-
-if (isset($_SESSION['mensaje'])) {
+if ($success) {
     echo "<script>
         Swal.fire({
             title: '¡Éxito!',
-            text: '" . $_SESSION['mensaje'] . "',
+            text: 'Usuario actualizado correctamente.',
             icon: 'success',
-            confirmButtonText: 'Aceptar'
+            timer: 4000,
+            timerProgressBar: true
         });
     </script>";
-    unset($_SESSION['mensaje']); 
-}
-
-if (isset($_SESSION['error'])) {
-    echo "<script>
-        Swal.fire({
-            title: 'Error',
-            text: '" . $_SESSION['error'] . "',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-        });
-    </script>";
-    unset($_SESSION['error']); 
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -59,6 +45,20 @@ if (isset($_SESSION['error'])) {
 </head>
 
 <body>
+<?php
+    if (isset($_SESSION['mensaje'])) {
+        echo "<script>
+            Swal.fire({
+                title: '¡Éxito!',
+                text: '" . $_SESSION['mensaje'] . "',
+                icon: 'success',
+                timer: 4000,
+                timerProgressBar: true
+            });
+            </script>";
+        unset($_SESSION['mensaje']);
+    }
+    ?>
     <div class="container">
         <div class="text-center mb-2 border border-secondary mt-5 d-flex align-items-center">
             <img src="/UR_CICLOPARQUEADERO/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">

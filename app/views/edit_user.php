@@ -53,7 +53,7 @@ if (!$usuario) {
             <br>
             <div class="mb-3">
                 <h3>Nombres y Apellidos</h3>
-                <?php echo htmlspecialchars($usuario['nombres']); ?><?php echo htmlspecialchars($usuario['apellidos']); ?>
+                <?php echo htmlspecialchars($usuario['nombres']); ?>  <?php echo htmlspecialchars($usuario['apellidos']); ?>
             </div>
             <div class="mb-3">
                 <h3>Correo Electrónico</h3>

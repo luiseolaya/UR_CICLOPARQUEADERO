@@ -27,7 +27,7 @@ class EntradaController {
 
     public function obtenerEntradasPorUsuario($id_usuario) {
         $query = "
-            SELECT e.id_entrada, e.fecha_hora, p.sede_parqueadero, e.foto
+            SELECT e.id_entrada, e.fecha_hora, p.sede_parqueadero, e.foto, e.observaciones
             FROM entrada e
             JOIN parqueadero p ON e.id_parqueadero = p.id_parqueadero
             WHERE e.id_usuario = :id_usuario
@@ -83,11 +83,11 @@ class EntradaController {
                 exit;
             }
 
-            // Caso 1: Si se reciben coordenadas GPS
+            //se reciben coordenadas GPS
             if ($latUsuario !== null && $lngUsuario !== null) {
                 $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
                 if ($distancia > $rangoMaximo) {
-                    $_SESSION['error'] = 'Debe estar dentro del rango de 50 kilómetros para registrar la entrada.';
+                    $_SESSION['error'] = 'Estás fuera del rango permitido.';
                     header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
                     exit;
                 }
@@ -141,10 +141,10 @@ class EntradaController {
             $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
 
             if ($this->entrada->crearEntrada()) {
-                unset($_SESSION['entrada_temp']); // Limpiar la entrada temporal
+                unset($_SESSION['entrada_temp']); 
                 $_SESSION['mensaje'] = "Entrada registrada con éxito.";
                 if ($_SESSION['rol'] === 'administrador') {
-                    header("Location: /UR_CICLOPARQUEADERO/admin_inc");
+                    header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
                 } else {
                     header("Location: /UR_CICLOPARQUEADERO/inicio");
                 }

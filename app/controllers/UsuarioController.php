@@ -207,6 +207,10 @@ class UsuarioController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
+
+
     public function actualizarUsuario() {
         if (!empty($_POST) && isset($_POST['id_usuario'])) {
             $this->usuario->id_usuario = $_POST['id_usuario'];
@@ -239,6 +243,8 @@ class UsuarioController {
     
         return $usuario;
     }
+
+
 
     public function actualizarTerminosYTelefono() {
         if (!empty($_POST) && isset($_POST['celular']) && isset($_POST['terminos'])) {
