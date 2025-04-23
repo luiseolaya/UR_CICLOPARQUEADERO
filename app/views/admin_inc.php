@@ -78,7 +78,7 @@ if ($success) {
                 </form>
                 <form action="/UR_CICLOPARQUEADERO/index.php" method="GET" class="me-2">
                     <button type="submit" name="generar_reporte" class="btn btn-outline-secondary btn-lg">
-                        <img src="/UR_CICLOPARQUEADERO/public/img/icon_pdf.png" alt="Generar PDF" width="20" height="20" class="me-2"> Generar PDF
+                        <img src="/UR_CICLOPARQUEADERO/public/img/xls_icon.png" alt="Generar excel" width="20" height="20" class="me-2"> Reporte Excel
                     </button>
                 </form>
                 <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">

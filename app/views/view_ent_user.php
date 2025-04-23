@@ -58,10 +58,11 @@ if (!$usuario) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($entradas as $entrada): ?>
+                    <?php foreach ($entradas as $entrada):     ?>
+                        
                         <tr>
                             <td><?php echo htmlspecialchars($entrada['id_entrada']); ?></td>
-                            <td><?php echo htmlspecialchars($entrada['fecha_hora']); ?></td>
+                            <td><?php echo htmlspecialchars($entrada['fecha_hora']->format('Y-m-d H:i:s'));  ?></td>
                             <td><?php echo htmlspecialchars($entrada['sede_parqueadero']); ?></td>
                             <td>
                                 <?php if ($entrada['foto']): ?>

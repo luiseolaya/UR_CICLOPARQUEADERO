@@ -1,4 +1,5 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -70,7 +71,6 @@ if (session_status() === PHP_SESSION_NONE) {
             .catch(err => {
                 console.error("Error al acceder a la cámara: ", err);
             });
-
         startbutton.addEventListener('click', (event) => {
             event.preventDefault();
             const context = canvas.getContext('2d');

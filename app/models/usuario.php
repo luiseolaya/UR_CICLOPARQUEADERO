@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
 use PDOException;
 
 class Usuario {
@@ -24,13 +23,15 @@ class Usuario {
     }
 
     public function validar() {
-        $query = "SELECT id_usuario, clave, rol FROM " . $this->table_name . " WHERE correo = :correo"; // Seleccionar también el campo rol
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':correo', $this->correo);
-        $stmt->execute();
+        $query = "SELECT id_usuario, clave, rol FROM " . $this->table_name . " WHERE correo = ?";
+        $stmt = sqlsrv_prepare($this->conn, $query, [$this->correo]);
 
-        if ($stmt->rowCount() > 0) {
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_execute($stmt)) {
+            return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
         }
 
         return false;
@@ -43,71 +44,98 @@ class Usuario {
             LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
             GROUP BY u.id_usuario
         ";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = sqlsrv_prepare($this->conn, $query);
+
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_execute($stmt)) {
+            $usuarios = [];
+            while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+                $usuarios[] = $row;
+            }
+            return $usuarios;
+        }
+
+        return [];
     }
 
     public function actualizar($id) {
         $query = "UPDATE usuarios 
-                  SET celular = :celular, rol = :rol 
-                  WHERE id_usuario = :id_usuario";
-        $stmt = $this->conn->prepare($query);
+                  SET celular = ?, rol = ? 
+                  WHERE id_usuario = ?";
+        $stmt = sqlsrv_prepare($this->conn, $query, [$this->celular, $this->rol, $id]);
 
-        // Bind 
-        $stmt->bindParam(':id_usuario', $id);
-        $stmt->bindParam(':celular', $this->celular);
-        $stmt->bindParam(':rol', $this->rol);
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
 
-        return $stmt->execute();
+        return sqlsrv_execute($stmt);
     }
 
     public function obtenerPorId($id) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = :id_usuario";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_usuario', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id_usuario = ?";
+        $stmt = sqlsrv_prepare($this->conn, $query, [$id]);
+
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_execute($stmt)) {
+            return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        }
+
+        return false;
     }
 
     public function insertarUsuario() {
         $query = "INSERT INTO " . $this->table_name . " (Ndocumento, nombres, apellidos, facultad, correo, rol, terminos_condiciones)
-                  VALUES (:Ndocumento, :nombres, :apellidos, :facultad, :correo, :rol, :terminos_condiciones)";
-        $stmt = $this->conn->prepare($query);
+                  VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $params = [
+            $this->Ndocumento,
+            $this->nombres,
+            $this->apellidos,
+            $this->facultad,
+            $this->correo,
+            $this->rol,
+            $this->terminos_condiciones
+        ];
+        $stmt = sqlsrv_prepare($this->conn, $query, $params);
 
-        $stmt->bindParam(':Ndocumento', $this->Ndocumento);
-        $stmt->bindParam(':nombres', $this->nombres);
-        $stmt->bindParam(':apellidos', $this->apellidos);
-        $stmt->bindParam(':facultad', $this->facultad);
-        $stmt->bindParam(':correo', $this->correo);
-        $stmt->bindParam(':rol', $this->rol);
-        $stmt->bindParam(':terminos_condiciones', $this->terminos_condiciones);
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
 
-        return $stmt->execute();
+        return sqlsrv_execute($stmt);
     }
 
     public function obtenerPorCorreo($correo) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE correo = :correo";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':correo', $correo);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM " . $this->table_name . " WHERE correo = ?";
+        $stmt = sqlsrv_prepare($this->conn, $query, [$correo]);
+
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
+
+        if (sqlsrv_execute($stmt)) {
+            return sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+        }
+
+        return false;
     }
 
     public function actualizarCelularYTerminos($id) {
         $query = "UPDATE " . $this->table_name . " 
-                  SET celular = :celular, terminos_condiciones = :terminos_condiciones 
-                  WHERE id_usuario = :id_usuario";
-        $stmt = $this->conn->prepare($query);
+                  SET celular = ?, terminos_condiciones = ? 
+                  WHERE id_usuario = ?";
+        $params = [$this->celular, $this->terminos_condiciones, $id];
+        $stmt = sqlsrv_prepare($this->conn, $query, $params);
 
-        // Asegurarse de que los valores no sean nulos
-        $this->celular = $this->celular ?? '';
-        $this->terminos_condiciones = $this->terminos_condiciones ?? 0;
+        if (!$stmt) {
+            die(print_r(sqlsrv_errors(), true));
+        }
 
-        $stmt->bindParam(':id_usuario', $id);
-        $stmt->bindParam(':celular', $this->celular);
-        $stmt->bindParam(':terminos_condiciones', $this->terminos_condiciones);
-
-        return $stmt->execute();
+        return sqlsrv_execute($stmt);
     }
 }

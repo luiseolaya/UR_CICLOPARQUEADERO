@@ -1,5 +1,9 @@
 <?php
 
+ini_set('log_errors', 1);
+ini_set('error_log', $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/log.txt');
+error_log("Inicio de ejecución en index.php");
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -25,9 +29,12 @@ $query = isset($parsed_url['query']) ? $parsed_url['query'] : '';
 parse_str($query, $params);
 error_log("Path: " . $path);
 
-if (isset($params['registrar_entrada'])) {
+
+if (isset($params['subir_evidencia'])) {
+  error_log("solicitud de subir evidencia recibida", 3, $_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/log.txt');
     $controller = new EntradaController();
-    $controller->registrarEntrada();
+    $controller->subirEvidencia();
+    exit; // Detén la ejecución para evitar duplicidad
 } elseif (isset($params['logout'])) {
     $controller = new LogoutController();
     $controller->logout();

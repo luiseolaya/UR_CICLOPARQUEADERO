@@ -1,98 +1,72 @@
 <?php
 namespace App\Controllers;
 
-require_once __DIR__ . '/../../vendor/fpdf182/fpdf.php';
-
-use FPDF;
 use app\Config\Database;
-use PDO;
 
 class ReporteController {
     public function generarReporte() {
-        ob_start(); 
-        $pdf = new PDF();
-        $pdf->AddPage();
-        $pdf->SetFont('Arial', 'B', 10); 
-        $pdf->Body();
-        ob_end_clean();
-        $pdf->Output('I', 'Entradas Cicloparqueadero.pdf');
-        exit;
-    }
-}
-
-class PDF extends FPDF {
-    function Header() {
-        $this->Watermark();
-        $this->SetFont("Arial", "", 18);
-        $this->Image($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/public/img/LOGOU.png", 10, 6, 20);
-        $this->Ln(5);
-        $this->Cell(30);
-        $this->Cell(0, 10, utf8_decode("Reporte de Entradas"), 0, 1, 'C');
-        $this->Ln(5);
-    }
-
-    function Watermark() {
-        
-        $watermarkPath = $_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/public/img/Marca_Agua.png";
-        
-        list($width, $height) = getimagesize($watermarkPath);
-        
-        $x = ($this->GetPageWidth() - $width / 4) / 2;
-        $y = ($this->GetPageHeight() - $height / 13) / 8;
-        $this->Image($watermarkPath, $x, $y, $width / 4, $height / 4);
-    }
-
-    function Body() {
         $database = new Database();
-        $my = $database->getConnection();
+        $connection = $database->getConnection(); 
+
+       
         $sql = "
             SELECT 
                 u.Ndocumento, 
                 u.nombres, 
                 u.apellidos, 
                 u.correo, 
-                COUNT(DISTINCT DATE(e.fecha_hora)) as entradas_unicas,
-                COUNT(e.id_entrada) as total_entradas
+                COUNT(DISTINCT CONVERT(DATE, e.fecha_hora)) AS entradas_unicas,
+                COUNT(e.id_entrada) AS total_entradas,
+                COUNT(e.observaciones) AS total_observaciones
             FROM usuarios u
             LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
             GROUP BY u.Ndocumento, u.nombres, u.apellidos, u.correo
             ORDER BY entradas_unicas DESC
-            LIMIT 10
         ";
 
-        $stm = $my->prepare($sql);
-        if (!$stm) {
-            die("Error en la preparación de la consulta: " . $my->errorInfo()[2]);
-        }
-        $stm->execute();
-
-        // Encabezados de la tabla
-        $this->SetFont("Arial", 'B', 9);
-        $this->SetFillColor(200, 220, 255); 
-        $this->Cell(28, 8, "N.Documento", 1, 0, 'C', true);
-        $this->Cell(35, 8, "Nombres", 1, 0, 'C', true);
-        $this->Cell(35, 8, "Apellidos", 1, 0, 'C', true);
-        $this->Cell(50, 8, "Correo", 1, 0, 'C', true);
-        $this->Cell(26, 8, "Entradas  Unicas", 1, 0, 'C', true);
-        $this->Cell(24, 8, "Total Entradas", 1, 1, 'C', true);
-
-        // Datos de la tabla
-        $this->SetFont("Arial", '', 9);
-        while ($row = $stm->fetch(PDO::FETCH_ASSOC)) {
-            $this->Cell(28, 8, $row['Ndocumento'], 1, 0, 'C');
-            $this->Cell(35, 8, utf8_decode(substr($row['nombres'], 0, 20)), 1, 0, 'C');
-            $this->Cell(35, 8, utf8_decode(substr($row['apellidos'], 0, 20)), 1, 0, 'C');
-            $this->Cell(50, 8, utf8_decode(substr($row['correo'], 0, 30)), 1, 0, 'C');
-            $this->Cell(26, 8, $row['entradas_unicas'], 1, 0, 'C');
-            $this->Cell(24, 8, $row['total_entradas'], 1, 1, 'C');
+        $stmt = sqlsrv_query($connection, $sql);
+        if ($stmt === false) {
+            die(print_r(sqlsrv_errors(), true));
         }
 
-        $stm->closeCursor();
-    }
+        
+        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
+        header("Content-Disposition: attachment; filename=Reporte_Cicloparqueaderos.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
 
-    function Footer() {
-        $this->SetY(-15);
-        $this->SetFont("Arial", 'I', 8);
-        $this->Cell(0, 10, "Universidad Del Rosario", 0, 0, 'C');
+       
+        echo '<html>';
+        echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
+        echo '<table width="100%" border="1">';
+        echo '<tr align="center">';
+        echo '<td colspan="6"><b>REPORTE DE ENTRADAS POR USUARIO - CICLOPARQUEADERO</b></td>';
+        echo '</tr>';
+        echo '<tr align="center">';
+        echo '<td><b>N.Documento</b></td>';
+        echo '<td><b>Nombres</b></td>';
+        echo '<td><b>Apellidos</b></td>';
+        echo '<td><b>Correo</b></td>';
+        echo '<td><b>Entradas Únicas</b></td>';
+        echo '<td><b>Total Entradas</b></td>';
+        echo '<td><b>Total Observaciones</b></td>';
+        echo '</tr>';
+
+        // Fetch and display data
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            echo '<tr>';
+            echo '<td>' . htmlspecialchars($row['Ndocumento']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['nombres']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['apellidos']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['entradas_unicas']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['total_entradas']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['total_observaciones']) . '</td>';
+            echo '</tr>';
+        }
+
+        echo '</table>';
+        echo '</html>';
+        exit;
     }
 }

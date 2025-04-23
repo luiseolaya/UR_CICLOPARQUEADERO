@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use PDO;
 use PDOException;
 
 class Entrada {
@@ -21,16 +20,33 @@ class Entrada {
 
     public function crearEntrada() {
         $query = "INSERT INTO entrada (id_usuario, id_parqueadero, fecha_hora, foto, observaciones) 
-                  VALUES (:id_usuario, :id_parqueadero, :fecha_hora, :foto, :observaciones)";
-
-        $stmt = $this->conn->prepare($query);
-
-        $stmt->bindParam(':id_usuario', $this->id_usuario);
-        $stmt->bindParam(':id_parqueadero', $this->id_parqueadero);
-        $stmt->bindParam(':fecha_hora', $this->fecha_hora);
-        $stmt->bindParam(':foto', $this->foto);
-        $stmt->bindParam(':observaciones', $this->observaciones);
-
-        return $stmt->execute();
+                  VALUES (?, ?, CONVERT(datetime, ?, 120), CONVERT(varbinary(MAX), ?), ?)";
+    
+        $params = [
+            $this->id_usuario,
+            $this->id_parqueadero,
+            $this->fecha_hora,
+            $this->foto ?? NULL,
+            $this->observaciones
+        ];
+    
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos para guardar: " . print_r($params, true) . "\n", FILE_APPEND);
+    
+        $stmt = sqlsrv_prepare($this->conn, $query, $params);
+    
+        if (!$stmt) {
+            $errors = print_r(sqlsrv_errors(), true);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR en SQLSRV Prepare: $errors\n", FILE_APPEND);
+            return false;
+        }
+    
+        if (!sqlsrv_execute($stmt)) {
+            $errors = print_r(sqlsrv_errors(), true);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR en SQLSRV Execute: $errors\n", FILE_APPEND);
+            return false;
+        }
+    
+        return true;
     }
-}
+    
+}    

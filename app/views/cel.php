@@ -31,7 +31,7 @@ unset($_SESSION['error'], $_SESSION['mensaje']);
                 <input type="tel" class="form-control" id="floatingInput" name="celular" placeholder="Celular" required pattern="[0-9]{10}">
                 <label for="floatingInput">Celular</label>
                 <input type="checkbox" name="terminos" value="1" required />
-                <a href="#">Aceptar términos y condiciones</a>
+                <a href="https://urosario.edu.co/terminos-y-condiciones">Aceptar términos y condiciones</a>
             </div>
             <button type="submit" name="actualizar_telefono" class="btn btn-primary w-100">Aceptar</button>
         </form>

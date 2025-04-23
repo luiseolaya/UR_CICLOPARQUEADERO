@@ -1,0 +1,267 @@
+[23-Apr-2025 12:25:13 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:25:13 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:26:55 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:26:55 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:05 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:05 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:06 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:06 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:07 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:07 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:07 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:29:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:29:07 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:32:11 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:32:11 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:33:06 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:33:06 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:42:41 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:42:41 UTC] Path: index.php
+[23-Apr-2025 12:47:46 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:47:46 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:47:47 UTC] Path: 
+[23-Apr-2025 12:49:04 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:05 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:05 UTC] Path: inicio
+[23-Apr-2025 12:49:05 UTC] PHP Fatal error:  Uncaught TypeError: DateTime::__construct(): Argument #1 ($datetime) must be of type string, DateTime given in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php:159
+Stack trace:
+#0 C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php(159): DateTime->__construct(Object(DateTime), Object(DateTimeZone))
+#1 C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\inc_user.php(11): App\Controllers\UsuarioController->mostrarUsuarioYEntradas()
+#2 C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php(54): require('C:\\wamp64\\www\\U...')
+#3 {main}
+  thrown in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php on line 159
+[23-Apr-2025 12:49:29 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:29 UTC] Path: 
+[23-Apr-2025 12:49:29 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:29 UTC] Path: 
+[23-Apr-2025 12:49:29 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:29 UTC] Path: 
+[23-Apr-2025 12:49:29 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:29 UTC] Path: 
+[23-Apr-2025 12:49:29 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:29 UTC] Path: 
+[23-Apr-2025 12:49:37 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:37 UTC] Path: 
+[23-Apr-2025 12:49:37 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:37 UTC] Path: 
+[23-Apr-2025 12:49:49 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:49 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:49:49 UTC] Path: inicio
+[23-Apr-2025 12:49:49 UTC] PHP Fatal error:  Uncaught TypeError: DateTime::__construct(): Argument #1 ($datetime) must be of type string, DateTime given in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php:159
+Stack trace:
+#0 C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php(159): DateTime->__construct(Object(DateTime), Object(DateTimeZone))
+#1 C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\inc_user.php(11): App\Controllers\UsuarioController->mostrarUsuarioYEntradas()
+#2 C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php(54): require('C:\\wamp64\\www\\U...')
+#3 {main}
+  thrown in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php on line 159
+[23-Apr-2025 12:51:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:51:07 UTC] Path: 
+[23-Apr-2025 12:51:18 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:51:18 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:51:18 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:53:04 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:53:04 UTC] PHP Fatal error:  Cannot declare class App\Controllers\ReporteController, because the name is already in use in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\reportecontroller.php on line 6
+[23-Apr-2025 12:53:04 UTC] PHP Stack trace:
+[23-Apr-2025 12:53:04 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 12:53:04 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:53:04 UTC] PHP Fatal error:  Cannot declare class App\Controllers\ReporteController, because the name is already in use in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\reportecontroller.php on line 6
+[23-Apr-2025 12:53:04 UTC] PHP Stack trace:
+[23-Apr-2025 12:53:04 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 12:53:15 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:53:15 UTC] PHP Fatal error:  Cannot declare class App\Controllers\ReporteController, because the name is already in use in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\reportecontroller.php on line 6
+[23-Apr-2025 12:53:15 UTC] PHP Stack trace:
+[23-Apr-2025 12:53:15 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 12:54:06 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:54:06 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:54:06 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 12:54:40 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:54:40 UTC] Path: index.php
+[23-Apr-2025 12:56:01 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:56:01 UTC] Path: reg_entrada
+[23-Apr-2025 12:56:04 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 12:56:04 UTC] Path: index.php
+[23-Apr-2025 13:24:52 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:24:52 UTC] Path: index.php
+[23-Apr-2025 13:26:05 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:26:05 UTC] Path: view_ent_user
+[23-Apr-2025 13:26:05 UTC] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, DateTime given in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:64
+Stack trace:
+#0 C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php(64): htmlspecialchars(Object(DateTime))
+#1 C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php(74): require('C:\\wamp64\\www\\U...')
+#2 {main}
+  thrown in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 64
+[23-Apr-2025 13:26:12 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:26:12 UTC] Path: view_ent_user
+[23-Apr-2025 13:26:12 UTC] PHP Fatal error:  Uncaught TypeError: htmlspecialchars(): Argument #1 ($string) must be of type string, DateTime given in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:64
+Stack trace:
+#0 C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php(64): htmlspecialchars(Object(DateTime))
+#1 C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php(74): require('C:\\wamp64\\www\\U...')
+#2 {main}
+  thrown in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 64
+[23-Apr-2025 13:27:38 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:27:38 UTC] Path: view_ent_user
+[23-Apr-2025 13:27:38 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:73
+[23-Apr-2025 13:27:38 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:73
+[23-Apr-2025 13:27:38 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 73
+[23-Apr-2025 13:27:38 UTC] PHP Stack trace:
+[23-Apr-2025 13:27:38 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:27:38 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:27:38 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:73
+[23-Apr-2025 13:29:48 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:29:48 UTC] Path: view_ent_user
+[23-Apr-2025 13:29:48 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:75
+[23-Apr-2025 13:29:48 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:75
+[23-Apr-2025 13:29:48 UTC] PHP Warning:  Undefined array key "observaciones" in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 75
+[23-Apr-2025 13:29:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:29:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:29:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:29:48 UTC] PHP   3. htmlspecialchars($string = NULL) C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php:75
+[23-Apr-2025 13:31:22 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:31:22 UTC] Path: view_ent_user
+[23-Apr-2025 13:31:48 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:31:48 UTC] Path: view_ent_user
+[23-Apr-2025 13:31:48 UTC] PHP Warning:  Undefined variable $entrada in C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\view_ent_user.php on line 61
+[23-Apr-2025 13:31:48 UTC] PHP Stack trace:
+[23-Apr-2025 13:31:48 UTC] PHP   1. {main}() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:0
+[23-Apr-2025 13:31:48 UTC] PHP   2. require() C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php:74
+[23-Apr-2025 13:32:24 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:32:24 UTC] Path: view_ent_user
+[23-Apr-2025 13:33:39 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:33:39 UTC] Path: view_ent_user
+[23-Apr-2025 13:33:48 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:33:48 UTC] Path: ADMINISTRADOR
+[23-Apr-2025 13:33:54 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:33:54 UTC] Path: edit_user
+[23-Apr-2025 13:35:15 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:15 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:15 UTC] Path: 
+[23-Apr-2025 13:35:16 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:16 UTC] Path: 
+[23-Apr-2025 13:35:16 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:16 UTC] Path: 
+[23-Apr-2025 13:35:26 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:26 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:35:26 UTC] Path: inicio
+[23-Apr-2025 13:35:26 UTC] PHP Fatal error:  Uncaught TypeError: DateTime::__construct(): Argument #1 ($datetime) must be of type string, DateTime given in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php:159
+Stack trace:
+#0 C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php(159): DateTime->__construct(Object(DateTime), Object(DateTimeZone))
+#1 C:\wamp64\www\UR_CICLOPARQUEADERO\app\views\inc_user.php(11): App\Controllers\UsuarioController->mostrarUsuarioYEntradas()
+#2 C:\wamp64\www\UR_CICLOPARQUEADERO\public\index.php(54): require('C:\\wamp64\\www\\U...')
+#3 {main}
+  thrown in C:\wamp64\www\UR_CICLOPARQUEADERO\app\controllers\UsuarioController.php on line 159
+[23-Apr-2025 13:37:33 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:37:33 UTC] Path: inicio
+[23-Apr-2025 13:38:03 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:38:03 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:38:03 UTC] Path: 
+[23-Apr-2025 13:38:16 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:38:16 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:38:16 UTC] Path: TERMINOS
+[23-Apr-2025 13:40:02 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:03 UTC] Path: 
+[23-Apr-2025 13:40:13 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:13 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:13 UTC] Path: 
+[23-Apr-2025 13:40:18 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:18 UTC] Path: 
+[23-Apr-2025 13:40:24 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:24 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:24 UTC] Path: TERMINOS
+[23-Apr-2025 13:40:32 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:32 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:32 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:32 UTC] Path: inicio
+[23-Apr-2025 13:40:35 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:35 UTC] Path: 
+[23-Apr-2025 13:40:36 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:36 UTC] Path: inicio
+[23-Apr-2025 13:40:37 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:37 UTC] Path: 
+[23-Apr-2025 13:40:37 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:37 UTC] Path: 
+[23-Apr-2025 13:40:37 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:37 UTC] Path: 
+[23-Apr-2025 13:40:38 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:38 UTC] Path: reg_entrada
+[23-Apr-2025 13:40:42 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:42 UTC] Path: reg_entrada
+[23-Apr-2025 13:40:42 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:42 UTC] Path: 
+[23-Apr-2025 13:40:52 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:52 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:52 UTC] Path: TERMINOS
+[23-Apr-2025 13:40:58 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:58 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:40:58 UTC] Path: evidencia
+[23-Apr-2025 13:40:59 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:00 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:00 UTC] Path: inicio
+[23-Apr-2025 13:41:02 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:02 UTC] Path: evidencia
+[23-Apr-2025 13:41:02 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:02 UTC] Path: 
+[23-Apr-2025 13:41:04 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:04 UTC] Path: reg_entrada
+[23-Apr-2025 13:41:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:07 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:07 UTC] Path: evidencia
+[23-Apr-2025 13:41:12 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:12 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:12 UTC] Path: inicio
+[23-Apr-2025 13:41:19 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:20 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:20 UTC] Path: evidencia
+[23-Apr-2025 13:41:24 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:24 UTC] Path: reg_entrada
+[23-Apr-2025 13:41:30 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:30 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:30 UTC] Path: inicio
+[23-Apr-2025 13:41:36 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:36 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:36 UTC] Path: evidencia
+[23-Apr-2025 13:41:41 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:41 UTC] Inicio de ejecución en index.php
+[23-Apr-2025 13:41:41 UTC] Path: evidencia

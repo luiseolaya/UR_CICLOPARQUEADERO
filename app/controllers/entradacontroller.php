@@ -21,25 +21,27 @@ class EntradaController {
 
     public function __construct() {
         $database = new Database();
-        $this->db = $database->getConnection();
+        $this->db = $database->getConnection(); 
         $this->entrada = new Entrada($this->db);
     }
-
+    
     public function obtenerEntradasPorUsuario($id_usuario) {
-        $query = "
-            SELECT e.id_entrada, e.fecha_hora, p.sede_parqueadero, e.foto, e.observaciones
-            FROM entrada e
-            JOIN parqueadero p ON e.id_parqueadero = p.id_parqueadero
-            WHERE e.id_usuario = :id_usuario
-            ORDER BY e.fecha_hora DESC
-        ";
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id_usuario', $id_usuario);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT e.id_entrada, e.fecha_hora, p.sede_parqueadero, e.foto, e.observaciones
+                  FROM entrada e
+                  JOIN parqueadero p ON e.id_parqueadero = p.id_parqueadero
+                  WHERE e.id_usuario = ? 
+                  ORDER BY e.fecha_hora DESC";
+    
+        $stmt = sqlsrv_query($this->db, $query, [$id_usuario]);
+    
+        $entradas = [];
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $entradas[] = $row;
+        }
+    
+        return $entradas;
     }
+    
 
     public function registrarEntrada() {
         if (!isset($_SESSION['id_usuario'])) {
@@ -83,11 +85,11 @@ class EntradaController {
                 exit;
             }
 
-            //se reciben coordenadas GPS
+            // Caso 1: Si se reciben coordenadas GPS
             if ($latUsuario !== null && $lngUsuario !== null) {
                 $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
                 if ($distancia > $rangoMaximo) {
-                    $_SESSION['error'] = 'Estás fuera del rango permitido.';
+                    $_SESSION['error'] = 'Debe estar dentro del rango de 50 kilómetros para registrar la entrada.';
                     header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
                     exit;
                 }
@@ -108,58 +110,57 @@ class EntradaController {
             exit;
         }
     }
-
     public function subirEvidencia() {
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Entró a subirEvidencia()\n", FILE_APPEND);
+    
         if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['entrada_temp'])) {
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: No hay sesión activa o entrada temporal\n", FILE_APPEND);
             $_SESSION['error'] = 'Primero debes registrar una entrada.';
             header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
             exit;
         }
-
-        // Verificar si el usuario existe en la base de datos
-        $query = "SELECT id_usuario FROM usuarios WHERE id_usuario = :id_usuario";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id_usuario', $_SESSION['id_usuario']);
-        $stmt->execute();
-
-        if ($stmt->rowCount() === 0) {
-            $_SESSION['error'] = 'El usuario no existe en la base de datos.';
-            header("Location: /UR_CICLOPARQUEADERO/");
+    
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: Método de solicitud inválido\n", FILE_APPEND);
+            $_SESSION['error'] = 'Método de solicitud inválido.';
+            header("Location: /UR_CICLOPARQUEADERO/evidencia");
             exit;
         }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['foto'])) {
-            $foto = $_POST['foto'];
-            $foto = str_replace('data:image/png;base64,', '', $foto);
-            $foto = base64_decode($foto);
-
-            // completar la entrada temporal
-            $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];
-            $this->entrada->id_parqueadero = $_SESSION['entrada_temp']['id_parqueadero'];
-            $this->entrada->fecha_hora = $_SESSION['entrada_temp']['fecha_hora'];
-            $this->entrada->foto = $foto;
-            $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
-
-            if ($this->entrada->crearEntrada()) {
-                unset($_SESSION['entrada_temp']); 
-                $_SESSION['mensaje'] = "Entrada registrada con éxito.";
-                if ($_SESSION['rol'] === 'administrador') {
-                    header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
-                } else {
-                    header("Location: /UR_CICLOPARQUEADERO/inicio");
-                }
-                exit;
-            } else {
-                $_SESSION['error'] = 'Error al registrar la entrada. Intente nuevamente.';
-                header("Location: /UR_CICLOPARQUEADERO/evidencia");
-                exit;
-            }
+    
+        // Decodificar foto y validar
+        $foto = !empty($_POST['foto']) ? base64_decode(str_replace('data:image/png;base64,', '', $_POST['foto'])) : NULL;
+        if ($foto !== NULL && $foto === false) {
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: La decodificación base64 de foto falló\n", FILE_APPEND);
+            $_SESSION['error'] = 'La foto enviada no es válida.';
+            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            exit;
+        }
+    
+        $_SESSION['entrada_temp']['foto'] = $foto;
+    
+        $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];
+        $this->entrada->id_parqueadero = $_SESSION['entrada_temp']['id_parqueadero'];
+        $this->entrada->fecha_hora = date('Y-m-d H:i:s', strtotime($_SESSION['entrada_temp']['fecha_hora']));
+        $this->entrada->foto = $_SESSION['entrada_temp']['foto'];
+        $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
+    
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos enviados: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
+    
+        if ($this->entrada->crearEntrada()) {
+            unset($_SESSION['entrada_temp']); 
+            $_SESSION['mensaje'] = "Entrada registrada con éxito.";
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Entrada guardada correctamente\n", FILE_APPEND);
+            
+            header("Location: " . ($_SESSION['rol'] === 'administrador' ? "/UR_CICLOPARQUEADERO/ADMINISTRADOR" : "/UR_CICLOPARQUEADERO/inicio"));
+            exit;
         } else {
-            $_SESSION['error'] = 'Datos de evidencia no encontrados.';
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: Fallo al guardar en la base de datos\n", FILE_APPEND);
+            $_SESSION['error'] = 'Error al registrar la entrada.';
             header("Location: /UR_CICLOPARQUEADERO/evidencia");
             exit;
         }
     }
+    
 
     private function calcularDistancia($lat1, $lon1, $lat2, $lon2) {
         $radioTierra = 6371; // Radio de la Tierra en km
