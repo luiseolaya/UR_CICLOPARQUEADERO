@@ -11,7 +11,7 @@ class Entrada {
     public $id_usuario;
     public $id_parqueadero;
     public $fecha_hora;
-    public $foto;
+    public $foto; 
     public $observaciones;
 
     public function __construct($db) {
@@ -20,17 +20,23 @@ class Entrada {
 
     public function crearEntrada() {
         $query = "INSERT INTO entrada (id_usuario, id_parqueadero, fecha_hora, foto, observaciones) 
-                  VALUES (?, ?, CONVERT(datetime, ?, 120), CONVERT(varbinary(MAX), ?), ?)";
+                  VALUES (?, ?, CONVERT(datetime, ?, 120), ?, ?)";
+    
+        
+        $fechaHora = new \DateTime($this->fecha_hora);
+        $fechaHoraFormateada = $fechaHora->format('Y-m-d H:i:s');
     
         $params = [
             $this->id_usuario,
             $this->id_parqueadero,
-            $this->fecha_hora,
-            $this->foto ?? NULL,
+            $fechaHoraFormateada, 
+            $this->foto,
             $this->observaciones
         ];
     
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos para guardar: " . print_r($params, true) . "\n", FILE_APPEND);
+      
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Consulta SQL: $query\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Parámetros: " . print_r($params, true) . "\n", FILE_APPEND);
     
         $stmt = sqlsrv_prepare($this->conn, $query, $params);
     
@@ -48,5 +54,4 @@ class Entrada {
     
         return true;
     }
-    
-}    
+}

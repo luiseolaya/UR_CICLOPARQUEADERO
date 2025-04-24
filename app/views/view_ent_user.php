@@ -58,15 +58,14 @@ if (!$usuario) {
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($entradas as $entrada):     ?>
-                        
+                    <?php foreach ($entradas as $entrada): ?>
                         <tr>
                             <td><?php echo htmlspecialchars($entrada['id_entrada']); ?></td>
-                            <td><?php echo htmlspecialchars($entrada['fecha_hora']->format('Y-m-d H:i:s'));  ?></td>
+                            <td><?php echo htmlspecialchars($entrada['fecha_hora']->format('Y-m-d H:i:s')); ?></td>
                             <td><?php echo htmlspecialchars($entrada['sede_parqueadero']); ?></td>
                             <td>
                                 <?php if ($entrada['foto']): ?>
-                                    <img src="data:image/jpeg;base64,<?php echo base64_encode($entrada['foto']); ?>" alt="Foto" style="width: 100px; height: auto;">
+                                    <img src="<?php echo htmlspecialchars($entrada['foto']); ?>" alt="Foto" style="width: 100px; height: auto;">
                                 <?php else: ?>
                                     Sin evidencia
                                 <?php endif; ?>

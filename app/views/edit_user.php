@@ -73,7 +73,7 @@ if (!$usuario) {
                     </select>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <a href="/UR_CICLOPARQUEADERO/ADMINISTRADOR" class="btn btn-outline-secondary">Cancelar</a>
+                    <a href="/UR_CICLOPARQUEADERO/ADMINISTRADOR" class="btn btn-primary">Cancelar</a>
                     <button type="submit" name="guardar_usuario" class="btn btn-primary">Guardar Cambios</button>
                 </div>
             </form>

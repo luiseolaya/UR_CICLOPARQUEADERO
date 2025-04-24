@@ -1,14 +1,18 @@
 <?php
 namespace App\Controllers;
 
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use app\Config\Database;
 
 class ReporteController {
     public function generarReporte() {
         $database = new Database();
-        $connection = $database->getConnection(); 
+        $connection = $database->getConnection();
 
-       
         $sql = "
             SELECT 
                 u.Ndocumento, 
@@ -29,44 +33,78 @@ class ReporteController {
             die(print_r(sqlsrv_errors(), true));
         }
 
+        // Crear un nuevo archivo Excel
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
         
-        header("Content-Type: application/vnd.ms-excel; charset=utf-8");
-        header("Content-Disposition: attachment; filename=Reporte_Cicloparqueaderos.xls");
-        header("Pragma: no-cache");
-        header("Expires: 0");
+        $drawing = new Drawing();
+        $drawing->setName('Logo');
+        $drawing->setDescription('Logo');
+        $drawing->setPath($_SERVER['DOCUMENT_ROOT'] . '/UR_CICLOPARQUEADERO/public/img/LOGOU.png');
+        $drawing->setHeight(87);
+        $drawing->setCoordinates('c1');
+        $drawing->setWorksheet($sheet); 
+
+         
+        $sheet->mergeCells('A3:G3');
+        $sheet->setCellValue('A3', 'Reporte de Entradas - Cicloparqueadero');
+        $sheet->getStyle('A3')->applyFromArray([
+            'font' => ['bold' => true, 'size' => 18],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+        ]);
+
+        
+        $sheet->setCellValue('A5', 'N.Documento')
+              ->setCellValue('B5', 'Nombres')
+              ->setCellValue('C5', 'Apellidos')
+              ->setCellValue('D5', 'Correo')
+              ->setCellValue('E5', 'Entradas Únicas')
+              ->setCellValue('F5', 'Total Entradas')
+              ->setCellValue('G5', 'Total Observaciones');
 
        
-        echo '<html>';
-        echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
-        echo '<table width="100%" border="1">';
-        echo '<tr align="center">';
-        echo '<td colspan="6"><b>REPORTE DE ENTRADAS POR USUARIO - CICLOPARQUEADERO</b></td>';
-        echo '</tr>';
-        echo '<tr align="center">';
-        echo '<td><b>N.Documento</b></td>';
-        echo '<td><b>Nombres</b></td>';
-        echo '<td><b>Apellidos</b></td>';
-        echo '<td><b>Correo</b></td>';
-        echo '<td><b>Entradas Únicas</b></td>';
-        echo '<td><b>Total Entradas</b></td>';
-        echo '<td><b>Total Observaciones</b></td>';
-        echo '</tr>';
+        $headerStyle = [
+            'font' => ['bold' => true, 'size' => 15],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFCCE5FF']
+            ]
+        ];
+        $sheet->getStyle('A5:G5')->applyFromArray($headerStyle);
 
-        // Fetch and display data
+        $rowIndex = 6;
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            echo '<tr>';
-            echo '<td>' . htmlspecialchars($row['Ndocumento']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['nombres']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['apellidos']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['correo']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['entradas_unicas']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['total_entradas']) . '</td>';
-            echo '<td>' . htmlspecialchars($row['total_observaciones']) . '</td>';
-            echo '</tr>';
+            $sheet->setCellValue('A' . $rowIndex, $row['Ndocumento'])
+                  ->setCellValue('B' . $rowIndex, $row['nombres'])
+                  ->setCellValue('C' . $rowIndex, $row['apellidos'])
+                  ->setCellValue('D' . $rowIndex, $row['correo'])
+                  ->setCellValue('E' . $rowIndex, $row['entradas_unicas'])
+                  ->setCellValue('F' . $rowIndex, $row['total_entradas'])
+                  ->setCellValue('G' . $rowIndex, $row['total_observaciones']);
+            $rowIndex++;
         }
 
-        echo '</table>';
-        echo '</html>';
+        $headerStyle = [
+            'font' => [ 'size' => 12],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER]
+        ];
+        $sheet->getStyle('A5:G' . ($rowIndex - 1))->applyFromArray($headerStyle);
+
+
+        
+        foreach (range('A', 'G') as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+    
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="Reporte_Cicloparqueaderos.xlsx"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
         exit;
     }
 }

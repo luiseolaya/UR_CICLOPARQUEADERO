@@ -119,7 +119,7 @@ if ($success) {
         <div class="d-flex justify-content-between align-items-center mt-4">
             <h3>Usuarios Registrados</h3>
             <div class="d-flex flex-column flex-md-row">
-                <!-- Formulario de búsqueda -->
+                
                 <form method="GET" action="/UR_CICLOPARQUEADERO/ADMINISTRADOR" class="d-flex">
                     <input type="text" name="search" class="form-control search-bar" placeholder="Buscar por nombre o correo">
                     <button type="submit" class="btn btn-outline-secondary ms-2">Buscar</button>

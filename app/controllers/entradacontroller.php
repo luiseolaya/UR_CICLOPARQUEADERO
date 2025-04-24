@@ -110,57 +110,62 @@ class EntradaController {
             exit;
         }
     }
+
     public function subirEvidencia() {
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Entró a subirEvidencia()\n", FILE_APPEND);
-    
         if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['entrada_temp'])) {
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: No hay sesión activa o entrada temporal\n", FILE_APPEND);
             $_SESSION['error'] = 'Primero debes registrar una entrada.';
             header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
             exit;
         }
-    
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: Método de solicitud inválido\n", FILE_APPEND);
             $_SESSION['error'] = 'Método de solicitud inválido.';
             header("Location: /UR_CICLOPARQUEADERO/evidencia");
             exit;
         }
-    
-        // Decodificar foto y validar
-        $foto = !empty($_POST['foto']) ? base64_decode(str_replace('data:image/png;base64,', '', $_POST['foto'])) : NULL;
-        if ($foto !== NULL && $foto === false) {
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: La decodificación base64 de foto falló\n", FILE_APPEND);
-            $_SESSION['error'] = 'La foto enviada no es válida.';
-            header("Location: /UR_CICLOPARQUEADERO/evidencia");
-            exit;
+
+        $fotoRuta = null;
+
+        // Verificar si se recibió una foto en base64
+        if (!empty($_POST['foto'])) {
+            $fotoBase64 = $_POST['foto'];
+            $fotoData = base64_decode(str_replace('data:image/png;base64,', '', $fotoBase64));
+            $fotoNombre = uniqid('foto_', true) . '.png';
+            $fotoRuta = '/UR_CICLOPARQUEADERO/public/uploads/' . $fotoNombre;
+            $destino = $_SERVER['DOCUMENT_ROOT'] . $fotoRuta;
+
+            // Guardar la imagen en el servidor
+            if (file_put_contents($destino, $fotoData) === false) {
+                $_SESSION['error'] = 'Error al guardar la foto.';
+                header("Location: /UR_CICLOPARQUEADERO/evidencia");
+                exit;
+            }
         }
-    
-        $_SESSION['entrada_temp']['foto'] = $foto;
-    
+
+        $_SESSION['entrada_temp']['foto'] = $fotoRuta;
+
+        // Asignar valores al modelo
         $this->entrada->id_usuario = $_SESSION['entrada_temp']['id_usuario'];
         $this->entrada->id_parqueadero = $_SESSION['entrada_temp']['id_parqueadero'];
-        $this->entrada->fecha_hora = date('Y-m-d H:i:s', strtotime($_SESSION['entrada_temp']['fecha_hora']));
+        $this->entrada->fecha_hora = (new \DateTime($_SESSION['entrada_temp']['fecha_hora']))->format('Y-m-d H:i:s');
         $this->entrada->foto = $_SESSION['entrada_temp']['foto'];
         $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
-    
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos enviados: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
-    
+
+        // Depuración: Verificar los datos antes de guardar
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos del modelo antes de guardar: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos del modelo: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
+
         if ($this->entrada->crearEntrada()) {
-            unset($_SESSION['entrada_temp']); 
+            unset($_SESSION['entrada_temp']);
             $_SESSION['mensaje'] = "Entrada registrada con éxito.";
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Entrada guardada correctamente\n", FILE_APPEND);
-            
             header("Location: " . ($_SESSION['rol'] === 'administrador' ? "/UR_CICLOPARQUEADERO/ADMINISTRADOR" : "/UR_CICLOPARQUEADERO/inicio"));
             exit;
         } else {
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR: Fallo al guardar en la base de datos\n", FILE_APPEND);
             $_SESSION['error'] = 'Error al registrar la entrada.';
             header("Location: /UR_CICLOPARQUEADERO/evidencia");
             exit;
         }
     }
-    
 
     private function calcularDistancia($lat1, $lon1, $lat2, $lon2) {
         $radioTierra = 6371; // Radio de la Tierra en km

@@ -203,7 +203,7 @@ class UsuarioController {
                 COUNT(DISTINCT CONVERT(DATE, e.fecha_hora)) as num_entradas, 
                 COUNT(e.id_entrada) as total_entradas
             FROM usuarios u
-            LEFT JOIN entrada e ON u.id_usuario = e.id_usuario
+            INNER JOIN entrada e ON u.id_usuario = e.id_usuario
             GROUP BY u.id_usuario, u.nombres, u.apellidos, u.correo
             ORDER BY num_entradas DESC
         ";
