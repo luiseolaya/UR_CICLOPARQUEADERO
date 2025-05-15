@@ -1,10 +1,18 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+require_once __DIR__ . '/../controllers/sessionController.php';
+
+// Verifica que el usuario esté autenticado
+if (!isset($_SESSION['usuario'])) {
+    header("Location: /cicloparqueaderos/?msg=timeout");
+    exit();
 }
+
+
 require_once __DIR__ . '/../controllers/UsuarioController.php';
 
+
 use App\Controllers\UsuarioController;
+
 
 $usuarioController = new UsuarioController();
 
@@ -39,9 +47,9 @@ if ($success) {
     <meta name="viewport" width="device-width, initial-scale=1.0">
     <title>Administrador Cicloparqueadero UR</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/cicloparqueaderos/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
+    <link href="/cicloparqueaderos/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
 
 <body>
@@ -61,27 +69,28 @@ if ($success) {
     ?>
     <div class="container">
         <div class="text-center mb-2 border border-secondary mt-5 d-flex align-items-center">
-            <img src="/UR_CICLOPARQUEADERO/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">
+            <img src="/cicloparqueaderos/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">
             <div>
                 <div class="fs-2 fw-bolder ms-3">Administrador Cicloparqueadero</div>
                 <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
             </div>
+			<img src="/cicloparqueaderos/public/img/selloefr.png" alt="selloefr" style="width: 55px; height: auto;">
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h5>Bienvenido Administrador, <?php echo htmlspecialchars($_SESSION['correo']); ?></h5>
+                <h5>Bienvenido Administrador, <?php echo htmlspecialchars($_SESSION['nombres']); ?></h5>
             </div>
             <div class="d-flex">
-                <form action="/UR_CICLOPARQUEADERO/reg_entrada" class="me-2">
-                    <a href="/UR_CICLOPARQUEADERO/reg_entrada" class="btn btn-outline-secondary btn-lg">+ Entrada</a>
+                <form action="/cicloparqueaderos/reg_entrada" class="me-2">
+                    <a href="/cicloparqueaderos/reg_entrada" class="btn btn-outline-secondary btn-lg">+ Entrada</a>
                 </form>
-                <form action="/UR_CICLOPARQUEADERO/index.php" method="GET" class="me-2">
+                <form action="/cicloparqueaderos/index.php" method="GET" class="me-2">
                     <button type="submit" name="generar_reporte" class="btn btn-outline-secondary btn-lg">
-                        <img src="/UR_CICLOPARQUEADERO/public/img/xls_icon.png" alt="Generar excel" width="20" height="20" class="me-2"> Reporte Excel
+                        <img src="/cicloparqueaderos/public/img/xls_icon.png" alt="Generar excel" width="20" height="20" class="me-2"> Reporte Excel
                     </button>
                 </form>
-                <form action="/UR_CICLOPARQUEADERO/index.php?logout=true" method="POST">
+                <form action="/cicloparqueaderos/index.php?logout=true" method="POST">
                     <button type="submit" name="logout" class="btn btn-outline-secondary btn-lg">Salir</button>
                 </form>
             </div>
@@ -117,10 +126,10 @@ if ($success) {
         <?php endif; ?>
 
         <div class="d-flex justify-content-between align-items-center mt-4">
-            <h3>Usuarios Registrados</h3>
+            <h3>Usuarios Registrados e Histórico de Entradas</h3>
             <div class="d-flex flex-column flex-md-row">
                 
-                <form method="GET" action="/UR_CICLOPARQUEADERO/ADMINISTRADOR" class="d-flex">
+                <form method="GET" action="/cicloparqueaderos/ADMINISTRADOR" class="d-flex">
                     <input type="text" name="search" class="form-control search-bar" placeholder="Buscar por nombre o correo">
                     <button type="submit" class="btn btn-outline-secondary ms-2">Buscar</button>
                 </form>
@@ -147,11 +156,11 @@ if ($success) {
                         <td><?php echo htmlspecialchars($usuario['rol']); ?></td>
                         <td><?php echo htmlspecialchars($usuario['facultad']); ?></td>
                         <td>
-                            <a href="edit_user?id=<?php echo htmlspecialchars($usuario['id_usuario']); ?>" class="actions-icon">
-                                <img src="/UR_CICLOPARQUEADERO/public/img/edit_icon.png" alt="Modificar" width="20" height="20">
+                            <a href="edit_user?id=<?php echo htmlspecialchars($usuario['id_usuario']); ?>" class="actions-icon" title="Editar Usuario">
+                                <img src="/cicloparqueaderos/public/img/edit_icon.png" alt="Modificar" width="20" height="20">
                             </a>
-                            <a href="view_ent_user?id=<?php echo htmlspecialchars($usuario['id_usuario']); ?>" class="actions-icon">
-                                <img src="/UR_CICLOPARQUEADERO/public/img/view_icon.png" alt="Ver Entradas" width="20" height="20">
+                            <a href="view_ent_user?id=<?php echo htmlspecialchars($usuario['id_usuario']); ?>" class="actions-icon" title="Ver Registros">
+                                <img src="/cicloparqueaderos/public/img/view_icon.png" alt="Ver Entradas" width="20" height="20">
                             </a>
                         </td>
                     </tr>
@@ -159,6 +168,15 @@ if ($success) {
             </tbody>
         </table>
     </div>
+	
+	<script>
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            // Si la página viene del cache (navegador), forzar recarga
+            window.location.reload();
+        }
+    };
+</script>
 </body>
 
 </html>

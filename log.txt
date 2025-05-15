@@ -1077,3 +1077,11 @@ Stack trace:
 [24-Apr-2025 13:41:23 UTC] Path: index.php
 [24-Apr-2025 13:45:55 UTC] Inicio de ejecución en index.php
 [24-Apr-2025 13:45:55 UTC] Path: index.php
+[15-May-2025 14:35:55 UTC] Inicio de ejecución en index.php
+[15-May-2025 14:35:55 UTC] Path: ADMINISTRADOR
+[15-May-2025 14:35:56 UTC] Inicio de ejecución en index.php
+[15-May-2025 14:35:56 UTC] Inicio de ejecución en index.php
+[15-May-2025 14:35:56 UTC] Path: 
+[15-May-2025 14:36:06 UTC] Inicio de ejecución en index.php
+[15-May-2025 14:36:06 UTC] Inicio de ejecución en index.php
+[15-May-2025 14:36:06 UTC] Path: ADMINISTRADOR

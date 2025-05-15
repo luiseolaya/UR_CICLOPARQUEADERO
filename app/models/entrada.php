@@ -35,20 +35,20 @@ class Entrada {
         ];
     
       
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Consulta SQL: $query\n", FILE_APPEND);
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Parámetros: " . print_r($params, true) . "\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "Consulta SQL: $query\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "Parámetros: " . print_r($params, true) . "\n", FILE_APPEND);
     
         $stmt = sqlsrv_prepare($this->conn, $query, $params);
     
         if (!$stmt) {
             $errors = print_r(sqlsrv_errors(), true);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR en SQLSRV Prepare: $errors\n", FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "ERROR en SQLSRV Prepare: $errors\n", FILE_APPEND);
             return false;
         }
     
         if (!sqlsrv_execute($stmt)) {
             $errors = print_r(sqlsrv_errors(), true);
-            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "ERROR en SQLSRV Execute: $errors\n", FILE_APPEND);
+            file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "ERROR en SQLSRV Execute: $errors\n", FILE_APPEND);
             return false;
         }
     

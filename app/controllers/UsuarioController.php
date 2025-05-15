@@ -30,7 +30,7 @@ class UsuarioController {
 
     public function iniciar() {
         if (empty($_POST)) {
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
 
@@ -41,7 +41,7 @@ class UsuarioController {
 
         if (!isset($_SESSION['id_usuario'])) {
             $_SESSION['error'] = 'ERROR CON SUS CREDENCIALES';
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
 
@@ -57,15 +57,26 @@ class UsuarioController {
             $this->usuario->terminos_condiciones = 0;
 
             $this->usuario->insertarUsuario();
-            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
+            header("Location: /cicloparqueaderos/TERMINOS");
             exit;
         }
+		
+		    // Guardar datos esenciales del usuario para validaciones de sesión
+           $_SESSION['usuario'] = [
+            'id' => $usuario['id_usuario'],
+            'correo' => $usuario['correo'],
+            'rol' => $usuario['rol']
+        ];
+
+        $_SESSION['LAST_ACTIVITY'] = time(); // iniciar control de inactividad
+
+
 
         if ($usuario['terminos_condiciones'] == 0) {
-            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
+            header("Location: /cicloparqueaderos/TERMINOS");
         } else {
             $redirect = ($usuario['rol'] === 'administrador') ? '/ADMINISTRADOR' : '/inicio';
-            header("Location: /UR_CICLOPARQUEADERO" . $redirect);
+            header("Location: /cicloparqueaderos" . $redirect);
         }
         exit;
     }
@@ -134,7 +145,7 @@ class UsuarioController {
     public function mostrarUsuarioYEntradas() {
         if (!isset($_SESSION['correo'])) {
             $_SESSION['error'] = 'Debe iniciar sesión para ver esta página.';
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
 
@@ -161,7 +172,7 @@ class UsuarioController {
                     $entrada['fecha_hora'] = new DateTime($entrada['fecha_hora'], new DateTimeZone('UTC'));
                 }
                 // Cambia la zona horaria
-                $entrada['fecha_hora']->setTimezone(new DateTimeZone('America/Bogota'));
+                //$entrada['fecha_hora']->setTimezone(new DateTimeZone('America/Bogota'));
                 $entrada['fecha_hora'] = $entrada['fecha_hora']->format('Y-m-d H:i:s');
                 $entradas[] = $entrada;
             }
@@ -268,10 +279,10 @@ class UsuarioController {
 
             if (sqlsrv_execute($stmt)) {
                 $_SESSION['mensaje'] = 'Usuario actualizado correctamente.';
-                header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
+                header("Location: /cicloparqueaderos/ADMINISTRADOR");
             } else {
                 $_SESSION['error'] = 'Error al actualizar el usuario.';
-                header("Location: /UR_CICLOPARQUEADERO/ADMINISTRADOR");
+                header("Location: /cicloparqueaderos/ADMINISTRADOR");
             }
             exit;
         }
@@ -280,14 +291,14 @@ class UsuarioController {
     public function mostrarActualizarTelefono() {
         if (!isset($_SESSION['id_usuario'])) {
             $_SESSION['error'] = 'Debe iniciar sesión para actualizar su teléfono.';
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
     
         $usuario = $this->usuario->obtenerPorId($_SESSION['id_usuario']);
         if (!$usuario) {
             $_SESSION['error'] = 'Usuario no encontrado.';
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
     
@@ -302,15 +313,15 @@ class UsuarioController {
 
             if ($this->usuario->actualizarCelularYTerminos($this->usuario->id_usuario)) {
                 $_SESSION['mensaje'] = 'Teléfono y términos actualizados correctamente.';
-                header("Location: /UR_CICLOPARQUEADERO/inicio");
+                header("Location: /cicloparqueaderos/inicio");
             } else {
                 $_SESSION['error'] = 'Error al actualizar la información.';
-                header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
+                header("Location: /cicloparqueaderos/TERMINOS");
             }
             exit;
         } else {
             $_SESSION['error'] = 'Datos incompletos. Por favor, intente nuevamente.';
-            header("Location: /UR_CICLOPARQUEADERO/TERMINOS");
+            header("Location: /cicloparqueaderos/TERMINOS");
             exit;
         }
     }
@@ -327,15 +338,15 @@ class UsuarioController {
 
             if (sqlsrv_execute($stmt)) {
                 $_SESSION['mensaje'] = 'Teléfono actualizado correctamente.';
-                header("Location: /UR_CICLOPARQUEADERO/inicio");
+                header("Location: /cicloparqueaderos/inicio");
             } else {
                 $_SESSION['error'] = 'Error al actualizar teléfono.';
-                header("Location: /UR_CICLOPARQUEADERO/actualizar_telefono");
+                header("Location: /cicloparqueaderos/actualizar_telefono");
             }
             exit;
         } else {
             $_SESSION['error'] = 'Datos incompletos. Por favor, intente nuevamente.';
-            header("Location: /UR_CICLOPARQUEADERO/actualizar_telefono");
+            header("Location: /cicloparqueaderos/actualizar_telefono");
             exit;
         }
     } 

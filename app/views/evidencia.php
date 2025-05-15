@@ -3,6 +3,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+require_once __DIR__ . '/../controllers/sessionController.php';
 
 ?>
 <!DOCTYPE html>
@@ -13,21 +14,21 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subir Evidencia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/cicloparqueaderos/public/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
+    <link href="/cicloparqueaderos/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
 
 <body>
     <div class="container text-center">
         <?php
         if (!isset($_SESSION['correo'])) {
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
         ?>
         <div class="mb-2 border border-secondary text-center mt-5 d-flex align-items-center">
-            <img src="/UR_CICLOPARQUEADERO/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">
+            <img src="/cicloparqueaderos/public/img/LOGOU.png" alt="Logo" class="me-3 ms-4" style="width: 50px; height: auto;">
             <div>
                 <div class="fs-2 fw-bolder ms-3">Cicloparqueadero</div>
                 <div class="fs-6 fw-bolder mb-2 ms-3">Universidad del Rosario</div>
@@ -37,18 +38,20 @@ if (session_status() === PHP_SESSION_NONE) {
             <h5>Bienvenido, <?php echo htmlspecialchars($_SESSION['correo']); ?></h5>
         </div>
 
-        <form id="evidencia-form" action="/UR_CICLOPARQUEADERO/index.php?subir_evidencia=true" method="POST" enctype="multipart/form-data">
+        <form id="evidencia-form" action="/cicloparqueaderos/index.php?subir_evidencia=true" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="foto">Tomar Foto:</label>
                 <video id="video" width="100%" height="auto" autoplay></video>
-                <button id="startbutton" class="btn btn-link">
-                    <img src="/UR_CICLOPARQUEADERO/public/img/camara.png" alt="Cámara" style="width: 35px; height: auto;">
+                <button id="startbutton" class="btn btn-link" style="display: flex; flex-direction: column; align-items: center;">
+                    <img src="/cicloparqueaderos/public/img/camara.png" alt="Cámara" style="width: 35px; height: auto;">
+					<br>
+    Capturar foto (no obligatorio)
                 </button>
                 <canvas id="canvas" style="display:none;"></canvas>
                 <img id="photo" alt="Tu foto" style="display:none;" />
                 <input type="hidden" name="foto" id="foto">
             </div>
-            <button type="submit" name="subir_evidencia" class="btn btn-outline-secondary mt-2 mb-4 fs-6">Subir foto</button>
+            <button type="submit" name="subir_evidencia" class="btn btn-outline-secondary mt-2 mb-4 fs-6">Registrar Entrada</button>
             <small style="display: block; color: gray; font-size: 12px; margin-top: 5px;">El tamaño de la foto no debe exceder los 5 MB.</small>
         </form>
     </div>

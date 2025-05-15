@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once __DIR__ . '/../controllers/UsuarioController.php';
 require_once __DIR__ . '/../controllers/EntradaController.php';
+require_once __DIR__ . '/../controllers/sessionController.php';
 use App\Controllers\UsuarioController;
 use App\Controllers\EntradaController;
 
@@ -37,8 +38,8 @@ if (!$usuario) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Entradas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/UR_CICLOPARQUEADERO/public/css/style.css">
-    <link  href="/UR_CICLOPARQUEADERO/public/img/icon_U.png" rel="icon" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="/cicloparqueaderos/public/css/style.css">
+    <link  href="/cicloparqueaderos/public/img/icon_U.png" rel="icon" type="image/x-icon" />
 </head>
 <body>
     <div class="container mt-5">
@@ -79,7 +80,7 @@ if (!$usuario) {
             <p class="text-center">No hay entradas registradas para este usuario.</p>
         <?php endif; ?>
         <div class="d-flex justify-content-center mt-4">
-            <a href="/UR_CICLOPARQUEADERO/ADMINISTRADOR" class="btn btn-outline-secondary">Volver</a>
+            <a href="/cicloparqueaderos/ADMINISTRADOR" class="btn btn-outline-secondary">Volver</a>
         </div>
     </div>
 </body>

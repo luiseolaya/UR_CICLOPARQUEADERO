@@ -1,6 +1,6 @@
 RewriteEngine On
-RewriteBase /UR_CICLOPARQUEADERO/
+RewriteBase /cicloparqueaderos/
 
 # Redirigir todas las solicitudes a la carpeta public
-RewriteCond %{REQUEST_URI} !^/UR_CICLOPARQUEADERO/public/
+RewriteCond %{REQUEST_URI} !^/cicloparqueaderos/public/
 RewriteRule ^(.*)$ public/$1 [L]

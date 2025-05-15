@@ -1,8 +1,8 @@
 RewriteEngine On
-RewriteBase /UR_CICLOPARQUEADERO/public/
+RewriteBase /cicloparqueaderos/public/
 
 # Excepción para la generación de PDF
-RewriteCond %{REQUEST_URI} ^/UR_CICLOPARQUEADERO/index.php$
+RewriteCond %{REQUEST_URI} ^/cicloparqueaderos/index.php$
 RewriteCond %{QUERY_STRING} generar_reporte
 RewriteRule ^ - [L]
 

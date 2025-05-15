@@ -46,7 +46,7 @@ class EntradaController {
     public function registrarEntrada() {
         if (!isset($_SESSION['id_usuario'])) {
             $_SESSION['error'] = 'Debe iniciar sesión para registrar una entrada.';
-            header("Location: /UR_CICLOPARQUEADERO/");
+            header("Location: /cicloparqueaderos/");
             exit;
         }
 
@@ -70,32 +70,32 @@ class EntradaController {
             // Validar que el parqueadero seleccionado sea válido
             if (!isset($parqueaderos[$idParqueadero])) {
                 $_SESSION['error'] = 'Seleccione un parqueadero válido.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                header("Location: /cicloparqueaderos/reg_entrada");
                 exit;
             }
 
             $latParqueadero = $parqueaderos[$idParqueadero]['lat'];
             $lngParqueadero = $parqueaderos[$idParqueadero]['lng'];
-            $rangoMaximo = 0.50; // Rango máximo en kilómetros
+            $rangoMaximo = 0.05; // Rango máximo en kilómetros
 
             // Validar código, color y parqueadero
             if ($_POST['codigo'] !== $codigo_aleatorio || $_POST['color'] !== $color_aleatorio || $_POST['id_parqueadero'] == 'Seleccione el Cicloparqueadero') {
                 $_SESSION['error'] = 'Ingrese de nuevo el código, color y parqueadero seleccionados.';
-                header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+                header("Location: /cicloparqueaderos/reg_entrada");
                 exit;
             }
 
             // Caso 1: Si se reciben coordenadas GPS
             if ($latUsuario !== null && $lngUsuario !== null) {
-                $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
-                if ($distancia > $rangoMaximo) {
-                    $_SESSION['error'] = 'Debe estar dentro del rango de 50 kilómetros para registrar la entrada.';
-                    header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
-                    exit;
-                }
+                 $distancia = $this->calcularDistancia($latUsuario, $lngUsuario, $latParqueadero, $lngParqueadero);
+                 if ($distancia > $rangoMaximo) {
+                    
+                    $_SESSION['alerta'] = 'Debe estar dentro del rango de 50 metros para registrar la entrada, pero de igual manera puede registrar su entrada.';
+                     $observaciones = 'GPS fuera del rango,posible fallo en hardware,ubicación no garantizada';
+            }
             } else {
                 // Caso 2: Si no se reciben coordenadas GPS
-                $observaciones = 'No se pudo reconocer GPS';
+                $observaciones = 'GPS fuera del rango,posible fallo en hardware,ubicación no garantizada';
             }
 
             // Guardar datos temporales de la entrada
@@ -106,7 +106,7 @@ class EntradaController {
                 'observaciones' => $observaciones
             ];
 
-            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            header("Location: /cicloparqueaderos/evidencia");
             exit;
         }
     }
@@ -114,13 +114,13 @@ class EntradaController {
     public function subirEvidencia() {
         if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['entrada_temp'])) {
             $_SESSION['error'] = 'Primero debes registrar una entrada.';
-            header("Location: /UR_CICLOPARQUEADERO/reg_entrada");
+            header("Location: /cicloparqueaderos/reg_entrada");
             exit;
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $_SESSION['error'] = 'Método de solicitud inválido.';
-            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            header("Location: /cicloparqueaderos/evidencia");
             exit;
         }
 
@@ -131,13 +131,13 @@ class EntradaController {
             $fotoBase64 = $_POST['foto'];
             $fotoData = base64_decode(str_replace('data:image/png;base64,', '', $fotoBase64));
             $fotoNombre = uniqid('foto_', true) . '.png';
-            $fotoRuta = '/UR_CICLOPARQUEADERO/public/uploads/' . $fotoNombre;
+            $fotoRuta = '/cicloparqueaderos/public/uploads/' . $fotoNombre;
             $destino = $_SERVER['DOCUMENT_ROOT'] . $fotoRuta;
 
             // Guardar la imagen en el servidor
             if (file_put_contents($destino, $fotoData) === false) {
                 $_SESSION['error'] = 'Error al guardar la foto.';
-                header("Location: /UR_CICLOPARQUEADERO/evidencia");
+                header("Location: /cicloparqueaderos/evidencia");
                 exit;
             }
         }
@@ -152,17 +152,17 @@ class EntradaController {
         $this->entrada->observaciones = $_SESSION['entrada_temp']['observaciones'];
 
         // Depuración: Verificar los datos antes de guardar
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos del modelo antes de guardar: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
-        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/UR_CICLOPARQUEADERO/phplogs.txt", "Datos del modelo: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "Datos del modelo antes de guardar: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
+        file_put_contents($_SERVER['DOCUMENT_ROOT'] . "/cicloparqueaderos/phplogs.txt", "Datos del modelo: " . print_r($this->entrada, true) . "\n", FILE_APPEND);
 
         if ($this->entrada->crearEntrada()) {
             unset($_SESSION['entrada_temp']);
             $_SESSION['mensaje'] = "Entrada registrada con éxito.";
-            header("Location: " . ($_SESSION['rol'] === 'administrador' ? "/UR_CICLOPARQUEADERO/ADMINISTRADOR" : "/UR_CICLOPARQUEADERO/inicio"));
+            header("Location: " . ($_SESSION['rol'] === 'administrador' ? "/cicloparqueaderos/ADMINISTRADOR" : "/cicloparqueaderos/inicio"));
             exit;
         } else {
             $_SESSION['error'] = 'Error al registrar la entrada.';
-            header("Location: /UR_CICLOPARQUEADERO/evidencia");
+            header("Location: /cicloparqueaderos/evidencia");
             exit;
         }
     }
@@ -216,11 +216,18 @@ if (isset($_POST['subir_evidencia'])) {
         
         localStorage.setItem('codigo_aleatorio', mensajeAleatorio);
         localStorage.setItem('color_aleatorio', colorAleatorio);
-
-        document.getElementById('entrada-form').addEventListener('submit', function(event) {
+		
+		let entrada_form = document.getElementById('entrada-form')
+		if(entrada_form){
+			document.getElementById('entrada-form').addEventListener('submit', function(event) {
             // Guardar código y color antes de enviar el formulario
             document.getElementById('codigo_aleatorio').value = localStorage.getItem('codigo_aleatorio');
             document.getElementById('color_aleatorio').value = localStorage.getItem('color_aleatorio');
         });
+			
+			
+		}
+
+        
     });
 </script>
